@@ -1,0 +1,7 @@
+node_modules/
+cert.pem
+key.pem
+.DS_Store
+yarn-error.log
+npm-debug.log
+.gemini/

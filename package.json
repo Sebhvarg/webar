@@ -1,0 +1,17 @@
+{
+  "name": "real-alto-webar",
+  "version": "1.0.0",
+  "description": "WebAR experience built with HTML, CSS, A-Frame and AR.js",
+  "main": "index.html",
+  "scripts": {
+    "dev": "http-server -p 3000 -c-1",
+    "dev-lan": "http-server -a 0.0.0.0 -p 3000 -c-1",
+    "dev-ssl": "http-server -S -C cert.pem -K key.pem -a 0.0.0.0 -p 3000 -c-1",
+    "tunnel": "lt --port 3000"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "localtunnel": "^2.0.2"
+  }
+}

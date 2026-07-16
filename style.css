@@ -1,0 +1,413 @@
+/* Premium WebAR CSS */
+:root {
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --bg-glass: rgba(15, 23, 42, 0.65);
+  --border-glass: rgba(255, 255, 255, 0.1);
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --accent: #10b981;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Outfit', 'Inter', sans-serif;
+  user-select: none;
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #090d16;
+  color: var(--text-primary);
+}
+
+/* UI Overlay Container */
+#ui-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10 !important;
+  pointer-events: none; /* Let clicks pass to A-Frame if needed, but subelements will override */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px;
+}
+
+/* Common Interactive elements should have pointer-events auto */
+.interactive {
+  pointer-events: auto;
+}
+
+/* Glassmorphism utility */
+.glass {
+  background: var(--bg-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-glass);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Welcome / Start Screen */
+#welcome-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  background: radial-gradient(circle at center, #1e1b4b 0%, #0f172a 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 32px;
+  text-align: center;
+}
+
+.welcome-card {
+  max-width: 480px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo-container {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, var(--primary), #a855f7);
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  box-shadow: 0 0 30px rgba(99, 102, 241, 0.4);
+  animation: float 4s ease-in-out infinite;
+}
+
+.logo-container svg {
+  width: 40px;
+  height: 40px;
+  fill: #fff;
+}
+
+h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  background: linear-gradient(to right, #fff, var(--text-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.02em;
+}
+
+p.subtitle {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+  line-height: 1.5;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 16px 32px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary) 0%, #4f46e5 100%);
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(99, 102, 241, 0.5);
+}
+
+.btn-primary:active {
+  transform: translateY(1px);
+}
+
+/* Floating animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Header & Status Indicator */
+.ar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.badge {
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--text-secondary);
+}
+
+.status-dot.active {
+  background-color: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.4; }
+  50% { opacity: 1; }
+  100% { opacity: 0.4; }
+}
+
+/* Instruction Banner */
+.instruction-banner {
+  position: absolute;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  padding: 16px 24px;
+  width: calc(100% - 48px);
+  max-width: 400px;
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.instruction-banner.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.instruction-text {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.instruction-subtext {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* Marker/Model Selector Bar at Bottom */
+.selector-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.selector-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  padding-left: 8px;
+}
+
+.model-list {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none; /* Hide scrollbar for clean look */
+}
+
+.model-list::-webkit-scrollbar {
+  display: none;
+}
+
+.model-card {
+  flex: 0 0 130px;
+  padding: 12px;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.model-card.active {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: var(--primary);
+  box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+}
+
+.model-icon {
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.model-card.active .model-icon {
+  background: var(--primary);
+}
+
+.model-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.model-marker-info {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+/* Utility action buttons (e.g. Anchor manually, Reset) */
+.action-btn-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.btn-secondary {
+  padding: 8px 16px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* AR.js specific overrides to clean up UI */
+.a-enter-vr {
+  display: none !important;
+}
+
+/* Ensure the webcam video element is visible and positioned correctly without breaking aspect ratio */
+video {
+  z-index: 1 !important;
+}
+
+/* Ensure the A-Frame canvas is transparent and overlayed on top of the video */
+.a-canvas {
+  z-index: 2 !important;
+  background-color: transparent !important;
+}
+
+/* --- Media Queries for Mobile Responsiveness --- */
+@media (max-width: 600px) {
+  #ui-container {
+    padding: 12px;
+  }
+
+  .welcome-card {
+    padding: 24px 16px;
+    width: 100%;
+    margin: 0 16px;
+  }
+
+  .logo-container {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 16px;
+  }
+
+  .logo-container svg {
+    width: 32px;
+    height: 32px;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  p.subtitle {
+    font-size: 0.9rem;
+    margin-bottom: 24px;
+  }
+
+  .btn-primary {
+    padding: 12px 24px;
+    font-size: 1rem;
+  }
+
+  .instruction-banner {
+    top: 76px;
+    width: calc(100% - 24px);
+    padding: 12px;
+  }
+
+  .instruction-text {
+    font-size: 0.9rem;
+  }
+
+  .instruction-subtext {
+    font-size: 0.75rem;
+  }
+
+  .selector-container {
+    gap: 8px;
+  }
+
+  .selector-title {
+    font-size: 0.75rem;
+  }
+
+  .model-card {
+    flex: 0 0 110px;
+    padding: 8px;
+    gap: 4px;
+  }
+
+  .model-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 1.2rem;
+    border-radius: 8px;
+  }
+
+  .model-name {
+    font-size: 0.75rem;
+  }
+
+  .model-marker-info {
+    font-size: 0.65rem;
+  }
+}

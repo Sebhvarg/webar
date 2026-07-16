@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  <title>RealAlto WebAR Experience</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- A-Frame and AR.js libraries -->
+  <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+  <!-- A-Frame Extras for GLTF Animations -->
+  <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body style="margin: 0; overflow: hidden;">
+
+  <!-- Welcome / Intro Screen -->
+  <div id="welcome-screen">
+    <div class="welcome-card glass">
+      <div class="logo-container">
+        <!-- SVG Isometric Cube Logo representing AR -->
+        <svg viewBox="0 0 24 24">
+          <path d="M12,2L1,8.3v7.4L12,22l11-6.3V8.3L12,2z M12,4.4l8.3,4.8L12,14L3.7,9.2L12,4.4z M3,14.5v-4.3l8,4.6v4.3L3,14.5z M21,14.5l-8,4.6v-4.3l8-4.6V14.5z"/>
+        </svg>
+      </div>
+      <h1>RealAlto WebAR</h1>
+      <p class="subtitle">Explora modelos 3D interactivos fijados en tu espacio real con marcadores aumentados.</p>
+      <button id="start-btn" class="btn-primary interactive">
+        <span>Iniciar Experiencia AR</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="5 3 19 12 5 21 5 3"></polygon>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Real-Time UI overlay -->
+  <div id="ui-container">
+    
+    <!-- Top Bar Status info -->
+    <div class="ar-header">
+      <div class="badge glass">
+        <span id="status-dot" class="status-dot"></span>
+        <span id="status-text">Cargando cámara...</span>
+      </div>
+      <button id="reset-btn" class="btn-secondary interactive">Reiniciar</button>
+    </div>
+
+    <!-- Instruction Banner -->
+    <div id="instruction-banner" class="instruction-banner glass">
+      <div id="instruction-title" class="instruction-text">MUEVA EL CELULAR HACIA ARRIBA</div>
+      <div id="instruction-desc" class="instruction-subtext">Tensa el dispositivo hacia arriba para fijar el modelo en tu espacio.</div>
+      <div class="action-btn-container">
+        <button id="device-tilt-btn" class="btn-secondary interactive" style="background: var(--primary); border: none; margin-top: 8px;">Ya lo moví</button>
+      </div>
+    </div>
+
+    <!-- Bottom Selection Bar -->
+    <div class="selector-container">
+      <div class="selector-title">Selecciona un modelo</div>
+      <div id="model-list" class="model-list">
+        <!-- Dynamically populated card selector -->
+      </div>
+    </div>
+
+  </div>
+
+  <!-- A-Frame VR/AR Scene setup -->
+  <!-- Note: We configure AR.js to search for patterns and we set source to webcam -->
+  <a-scene 
+    embedded 
+    arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
+    vr-mode-ui="enabled: false"
+    renderer="logarithmicDepthBuffer: true; colorManagement: true;">
+    
+    <!-- Camera is standard static camera that supports WebAR controls -->
+    <a-entity camera></a-entity>
+    
+  </a-scene>
+
+  <!-- Control App Script -->
+  <script src="app.js"></script>
+</body>
+</html>
