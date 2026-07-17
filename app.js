@@ -55,6 +55,7 @@ startBtn.addEventListener('click', async () => {
       if (permissionState === 'granted') {
         window.addEventListener('deviceorientation', handleOrientation);
         window.addEventListener('deviceorientation', handleParallax);
+        window.addEventListener('deviceorientationabsolute', handleParallax);
       }
     } catch (error) {
       console.warn("Could not request DeviceOrientation permission:", error);
@@ -62,6 +63,7 @@ startBtn.addEventListener('click', async () => {
   } else {
     window.addEventListener('deviceorientation', handleOrientation);
     window.addEventListener('deviceorientation', handleParallax);
+    window.addEventListener('deviceorientationabsolute', handleParallax);
   }
 
   // Hide welcome screen and show AR elements
@@ -375,6 +377,8 @@ function startZoomAndFade(event) {
 }
 
 function showInteriorOverlay() {
+  state.interiorActive = true;
+
   // Hide UI HUD and A-Frame scene
   const uiContainer = document.getElementById('ui-container');
   const sceneEl = document.querySelector('a-scene');
@@ -382,14 +386,25 @@ function showInteriorOverlay() {
   if (uiContainer) uiContainer.style.display = 'none';
   if (sceneEl) sceneEl.style.display = 'none';
   
+  // Stop and remove the webcam video stream to release camera hardware
+  // and prevent AR.js from triggering orientation resize conflicts in the background
+  const videoEl = document.querySelector('video');
+  if (videoEl) {
+    const stream = videoEl.srcObject;
+    if (stream) {
+      const tracks = stream.getTracks();
+      tracks.forEach(track => track.stop());
+    }
+    videoEl.parentNode.removeChild(videoEl);
+  }
+  
   // Display fullscreen interior overlay
   const interiorOverlay = document.getElementById('interior-overlay');
   const interiorBg = document.getElementById('interior-bg');
   
   if (interiorOverlay) {
     interiorOverlay.style.display = 'block';
-    interiorBg.style.backgroundImage = "url('assets/img/interiorchoza.webp')";
-    state.interiorActive = true;
+    interiorBg.style.backgroundImage = "url('assets/img/interiorchoza.png')";
   }
 }
 
