@@ -15,8 +15,8 @@ const state = {
       type: 'image',
       url: 'assets/img/choza.png',
       scale: '2 2 2',
-      position: '0 0.5 0',
-      rotation: '0 0 0',
+      position: '0 0.01 0',
+      rotation: '-90 0 0',
       emoji: '🛖'
     },
     spaceship: {
