@@ -8,6 +8,7 @@ const state = {
   modelAnchored: false,
   initialPitch: null,
   tiltThreshold: 15, // Degrees tilt up to trigger anchor
+  interiorActive: false, // For gyroscope parallax effect
   models: {
     robot: {
       name: 'Choza RealAlto',
@@ -386,6 +387,7 @@ function showInteriorOverlay() {
   if (interiorOverlay) {
     interiorOverlay.style.display = 'block';
     interiorBg.style.backgroundImage = "url('assets/img/interiorchoza.png')";
+    state.interiorActive = true;
   }
 }
 
@@ -408,6 +410,31 @@ document.addEventListener('DOMContentLoaded', () => {
       modelModal.classList.remove('visible');
       interiorBg.classList.remove('blurred');
     });
+  }
+});
+
+// Gyroscope-based Parallax tilt effect for interior background
+window.addEventListener('deviceorientation', (event) => {
+  if (!state.interiorActive) return;
+
+  const tiltX = event.gamma; // Left/Right tilt [-90, 90]
+  const tiltY = event.beta;  // Front/Back tilt [-180, 180]
+
+  if (tiltX === null || tiltY === null) return;
+
+  // Base portrait holding angles: gamma = 0, beta = 75
+  const maxOffset = 50; // max shift in pixels
+  const targetX = -(tiltX / 30) * maxOffset;
+  const targetY = -((tiltY - 75) / 25) * maxOffset;
+
+  // Clamp boundaries to prevent image edges from showing
+  const clampedX = Math.max(-maxOffset, Math.min(maxOffset, targetX));
+  const clampedY = Math.max(-maxOffset, Math.min(maxOffset, targetY));
+
+  const interiorBg = document.getElementById('interior-bg');
+  if (interiorBg) {
+    // scale(1.15) provides extra padding room for movement without revealing borders
+    interiorBg.style.transform = `translate(${clampedX}px, ${clampedY}px) scale(1.15)`;
   }
 });
 
