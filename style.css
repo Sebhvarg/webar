@@ -504,6 +504,10 @@ video {
   visibility: hidden;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   z-index: 160;
+  background: transparent !important; /* Make the modal card transparent */
+  box-shadow: none !important;        /* Remove shadow */
+  border: none !important;            /* Remove border */
+  backdrop-filter: none !important;   /* Avoid double blur filter conflict */
 }
 
 .model-modal.visible {
@@ -515,13 +519,13 @@ video {
 .model-viewer-container {
   width: 100%;
   flex: 1;
-  background: rgba(0, 0, 0, 0.3);
+  background: transparent !important; /* Make model viewer background fully transparent */
   border-radius: 16px;
   overflow: hidden;
   margin-top: 10px;
   margin-bottom: 16px;
   position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: none !important;            /* Remove borders around model */
 }
 
 model-viewer {
