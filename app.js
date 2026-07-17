@@ -14,7 +14,7 @@ const state = {
       markerPreset: 'hiro',
       type: 'image',
       url: 'assets/img/choza.png',
-      scale: '2 2 2',
+      scale: '3.55 1.5 1',
       position: '0 0.01 0',
       rotation: '-90 0 0',
       emoji: '🛖'
