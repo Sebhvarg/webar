@@ -3,19 +3,22 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { ArViewComponent } from './features/ar-view/ar-view.component';
 import { CabinViewComponent } from './features/cabin-view/cabin-view.component';
+import { HomeComponent } from './pages/home/home.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { StateService } from './core/services/state.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule, ArViewComponent, CabinViewComponent],
+  imports: [CommonModule, IonicModule, ArViewComponent, CabinViewComponent, HomeComponent, SidebarComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppComponent implements OnInit {
   showLoadingScreen = true;
 
-  constructor() {}
+  constructor(public stateService: StateService) {}
 
   ngOnInit() {
     // Desvanecer la pantalla de carga después de 2 segundos para dar tiempo a que los recursos de A-Frame se inicialicen

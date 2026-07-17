@@ -68,6 +68,18 @@ export class ArViewComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.stateService.modelAnchored$.subscribe(anchored => this.modelAnchored = anchored)
     );
+
+    this.subscriptions.add(
+      this.stateService.arStarted$.subscribe(started => {
+        if (started) {
+          this.statusDotActive = true;
+          const modelConfig = this.stateService.models[this.activeModelId];
+          this.statusText = `Escaneando marcador [${modelConfig.markerPreset.toUpperCase()}]`;
+          this.setupScene();
+          this.requestSensorPermissions();
+        }
+      })
+    );
   }
 
   ngOnDestroy() {

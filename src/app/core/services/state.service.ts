@@ -30,6 +30,12 @@ export class StateService {
   private activeElementIdSource = new BehaviorSubject<string>('valdivia');
   activeElementId$ = this.activeElementIdSource.asObservable();
 
+  private sidebarOpenSource = new BehaviorSubject<boolean>(false);
+  sidebarOpen$ = this.sidebarOpenSource.asObservable();
+
+  private activeTabSource = new BehaviorSubject<string>('inicio');
+  activeTab$ = this.activeTabSource.asObservable();
+
   // Layer-based Experience Data Pattern
   public layers: Layer[] = [
     {
@@ -112,6 +118,14 @@ export class StateService {
 
   setActiveElementId(elementId: string) {
     this.activeElementIdSource.next(elementId);
+  }
+
+  setSidebarOpen(open: boolean) {
+    this.sidebarOpenSource.next(open);
+  }
+
+  setActiveTab(tab: string) {
+    this.activeTabSource.next(tab);
   }
 
   getCurrentLayer(): Layer {

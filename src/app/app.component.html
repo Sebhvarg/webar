@@ -7,8 +7,9 @@
     </div>
   </div>
 
-  <!-- Interactive A-Frame Scene -->
+  <!-- Interactive A-Frame Scene (Only initialized after starting WebAR) -->
   <a-scene 
+    *ngIf="stateService.arStarted$ | async"
     embedded 
     arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
     vr-mode-ui="enabled: false"
@@ -47,9 +48,15 @@
     </a-entity>
   </a-scene>
 
+  <!-- Home Page / Main Layer -->
+  <app-home-page *ngIf="!(stateService.arStarted$ | async)"></app-home-page>
+
   <!-- AR Experience Overlay Page -->
-  <app-ar-view></app-ar-view>
+  <app-ar-view *ngIf="stateService.arStarted$ | async"></app-ar-view>
 
   <!-- Gyroscopic Cabin Experience Overlay -->
-  <app-cabin-view></app-cabin-view>
+  <app-cabin-view *ngIf="stateService.arStarted$ | async"></app-cabin-view>
+
+  <!-- Sidebar Component Layer -->
+  <app-sidebar></app-sidebar>
 </ion-app>

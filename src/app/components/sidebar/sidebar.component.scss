@@ -1,0 +1,135 @@
+.sidebar-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+
+  &.open {
+    opacity: 1;
+    pointer-events: auto;
+
+    .sidebar-container {
+      transform: translateX(0);
+    }
+  }
+}
+
+.sidebar-container {
+  width: 290px;
+  max-width: 80vw;
+  height: 100%;
+  background-color: #ffffff;
+  box-shadow: 4px 0 25px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  transform: translateX(-100%);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-sizing: border-box;
+}
+
+/* Brand Section */
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px;
+
+  border-bottom: 1.5px solid #f0f0f0;
+}
+.logo-side-wrapper {
+  width: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logoside {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+
+/* Nav Menu List */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+  flex: 1;
+}
+
+.nav-item {
+  width: 100%;
+  height: 52px;
+  border: none;
+  border-top: 1.5px solid #ffe9d2;
+  border-bottom: 1.5px solid #ffe9d2;
+  background: #ffffff;
+  color: #ff9f1c;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-align: center;
+  cursor: pointer;
+  margin-top: -1.5px; /* Collapse border overlap */
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background: rgba(255, 159, 28, 0.05);
+  }
+
+  &.active {
+    background: #ff9f1c;
+    color: #ffffff;
+    border-color: #ff9f1c;
+    box-shadow: 0 4px 10px rgba(255, 159, 28, 0.2);
+  }
+}
+
+/* Footer Section */
+.sidebar-footer {
+  padding: 30px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top: 1.5px solid #f0f0f0;
+}
+
+.btn-logout {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #777777;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: #ff9f1c;
+    background-color: rgba(255, 159, 28, 0.1);
+  }
+
+  &:active {
+    transform: scale(0.92);
+  }
+
+  .logout-icon {
+    width: 32px;
+    height: 32px;
+  }
+}

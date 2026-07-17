@@ -35,17 +35,3 @@
   </div>
 </div>
 
-<div class="start-overlay" *ngIf="!(stateService.arStarted$ | async)">
-  <div class="welcome-card glass">
-    <div class="logo-container">
-      <svg viewBox="0 0 24 24">
-        <path d="M12,2L1,8.3v7.4L12,22l11-6.3V8.3L12,2z M12,4.4l8.3,4.8L12,14L3.7,9.2L12,4.4z M3,14.5v-4.3l8,4.6v4.3L3,14.5z M21,14.5l-8,4.6v-4.3l8-4.6V14.5z"/>
-      </svg>
-    </div>
-    <h1>RealAlto WebAR</h1>
-    <p class="subtitle">Explora modelos 3D interactivos fijados en tu espacio real con marcadores aumentados.</p>
-    <button id="start-btn" class="btn-primary interactive" (click)="startAR()">
-      <span>Iniciar Experiencia AR</span>
-    </button>
-  </div>
-</div>

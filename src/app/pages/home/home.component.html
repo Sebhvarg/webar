@@ -1,0 +1,74 @@
+<div class="home-container">
+  <!-- Blurred background image -->
+  <div class="background-overlay"></div>
+
+  <!-- Header section -->
+  <header class="home-header">
+    <button class="menu-btn" aria-label="Menú" (click)="toggleSidebar()">
+      <span class="menu-icon">☰</span>
+    </button>
+    <div class="badge-complejo">
+      <span>COMPLEJO CULTURAL</span>
+    </div>
+  </header>
+
+  <!-- Main content -->
+  <main class="home-content">
+    <!-- Brand / Logo Area -->
+    <div class="brand-container">
+      <div class="logo-wrapper">
+        <img
+          src="assets/img/logovaldivia.webp"
+          alt="Logo"
+          
+        />
+      </div>
+      <div class="brand-divider"></div>
+      <div class="brand-text">
+        <h1 class="title-real">REAL</h1>
+        <h1 class="title-alto">ALTO</h1>
+      </div>
+    </div>
+
+    <!-- Location -->
+    <p class="location-text">Santa Elena · Ecuador</p>
+
+    <!-- App Pitch -->
+    <h2 class="main-pitch">Guía Interactiva en Realidad Aumentada</h2>
+    <p class="description-text">
+      Descubre réplicas arqueológicas tridimensionales e historia interactiva directamente en el área abierta del museo.
+    </p>
+
+    <!-- Action Button -->
+    <button class="btn-start-ar" (click)="iniciarWebAR()">
+      Iniciar recorrido WebAR
+    </button>
+
+    <!-- Warning Message -->
+    <p class="warning-text">
+      <span class="warning-icon">▲</span> Requiere permisos de cámara y un entorno bien iluminado
+    </p>
+
+    <!-- Gallery Section -->
+    <section class="gallery-section">
+      <h3 class="gallery-title">Galería de Exhibiciones</h3>
+      <div class="gallery-grid">
+        <div 
+          *ngFor="let item of galleryItems; let i = index" 
+          class="gallery-card"
+          [class.active]="activeSlideIndex === i">
+          <img [src]="item.image" [alt]="item.title" class="gallery-img">
+        </div>
+      </div>
+      <!-- Dots indicator -->
+      <div class="gallery-dots">
+        <span 
+          *ngFor="let item of galleryItems; let i = index"
+          class="dot" 
+          [class.active]="activeSlideIndex === i"
+          (click)="setSlide(i)">
+        </span>
+      </div>
+    </section>
+  </main>
+</div>
