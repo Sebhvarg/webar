@@ -512,7 +512,7 @@ function handleParallax(event) {
 
   const interiorBg = document.getElementById('interior-bg');
   if (interiorBg) {
-    interiorBg.style.transform = `translate(${baseOffsetX}px, ${baseOffsetY}px) scale(1.1)`;
+    interiorBg.style.transform = `translate(${baseOffsetX}px, ${baseOffsetY}px) scale(1.35)`;
   }
 }
 
@@ -557,7 +557,7 @@ function setupInteriorControls() {
       
       const interiorBg = document.getElementById('interior-bg');
       if (interiorBg) {
-        interiorBg.style.transform = `translate(${clampedX}px, ${clampedY}px) scale(1.1)`;
+        interiorBg.style.transform = `translate(${clampedX}px, ${clampedY}px) scale(1.35)`;
       }
     }, { passive: true });
 
