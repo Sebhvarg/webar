@@ -149,6 +149,10 @@ function setupScene() {
   modelEl.setAttribute('scale', modelConfig.scale);
   modelEl.setAttribute('position', modelConfig.position);
   modelEl.setAttribute('rotation', modelConfig.rotation);
+  
+  // Bind click event for transition zoom-and-fade
+  modelEl.classList.add('interactive');
+  modelEl.addEventListener('click', startZoomAndFade);
 
   currentMarker.appendChild(modelEl);
   sceneEl.appendChild(currentMarker);
@@ -276,6 +280,10 @@ function anchorModel() {
   // In standard AR.js camera is at 0 0 0, marker moves. Let's place it at the captured world coordinates!
   staticModel.setAttribute('position', `${worldPos.x} ${worldPos.y} ${worldPos.z}`);
   
+  // Bind click event for transition zoom-and-fade
+  staticModel.classList.add('interactive');
+  staticModel.addEventListener('click', startZoomAndFade);
+  
   sceneEl.appendChild(staticModel);
   
   // Copy exact rotation
@@ -311,6 +319,97 @@ function showInstruction(title, desc) {
 function hideInstruction() {
   instructionBanner.classList.remove('visible');
 }
+
+// --- Interactive Zoom and Fade Transition Logic ---
+let transitioning = false;
+
+function startZoomAndFade(event) {
+  if (transitioning) return;
+  transitioning = true;
+
+  const el = event.currentTarget;
+  
+  // Capture initial scale and position
+  const currentScale = el.getAttribute('scale') || {x: 1, y: 1, z: 1};
+  const startScaleX = currentScale.x;
+  const startScaleY = currentScale.y;
+  const startScaleZ = currentScale.z;
+  
+  const currentPos = el.getAttribute('position') || {x: 0, y: 0, z: 0};
+  const startPosX = currentPos.x;
+  const startPosY = currentPos.y;
+  const startPosZ = currentPos.z;
+
+  const duration = 1200; // 1.2 seconds for animation
+  const startTime = performance.now();
+
+  function animate(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    
+    // Ease-in animation curve
+    const easeProgress = progress * progress; 
+    const zoomFactor = 1 + easeProgress * 5.0; // Zoom up to 6x
+    const opacity = 1 - progress;
+
+    // Apply scale zoom
+    el.setAttribute('scale', `${startScaleX * zoomFactor} ${startScaleY * zoomFactor} ${startScaleZ * zoomFactor}`);
+    
+    // Move closer towards the screen
+    el.setAttribute('position', `${startPosX} ${startPosY + easeProgress * 0.8} ${startPosZ + easeProgress * 2.5}`);
+    
+    // Apply material opacity fadeout
+    el.setAttribute('material', `opacity: ${opacity}`);
+
+    if (progress < 1) {
+      requestAnimationFrame(animate);
+    } else {
+      showInteriorOverlay();
+    }
+  }
+
+  requestAnimationFrame(animate);
+}
+
+function showInteriorOverlay() {
+  // Hide UI HUD and A-Frame scene
+  const uiContainer = document.getElementById('ui-container');
+  const sceneEl = document.querySelector('a-scene');
+  
+  if (uiContainer) uiContainer.style.display = 'none';
+  if (sceneEl) sceneEl.style.display = 'none';
+  
+  // Display fullscreen interior overlay
+  const interiorOverlay = document.getElementById('interior-overlay');
+  const interiorBg = document.getElementById('interior-bg');
+  
+  if (interiorOverlay) {
+    interiorOverlay.style.display = 'block';
+    interiorBg.style.backgroundImage = "url('assets/img/interiorchoza.png')";
+  }
+}
+
+// Setup Interior Overlay Interactive Actions
+document.addEventListener('DOMContentLoaded', () => {
+  const valdiviaBtn = document.getElementById('valdivia-btn');
+  const closeModalBtn = document.getElementById('close-modal-btn');
+  const interiorBg = document.getElementById('interior-bg');
+  const modelModal = document.getElementById('model-modal');
+
+  if (valdiviaBtn) {
+    valdiviaBtn.addEventListener('click', () => {
+      interiorBg.classList.add('blurred');
+      modelModal.classList.add('visible');
+    });
+  }
+
+  if (closeModalBtn) {
+    closeModalBtn.addEventListener('click', () => {
+      modelModal.classList.remove('visible');
+      interiorBg.classList.remove('blurred');
+    });
+  }
+});
 
 // Initialize selector on page load
 buildSelectorUI();

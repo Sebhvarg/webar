@@ -14,6 +14,8 @@
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
   <!-- A-Frame Extras for GLTF Animations -->
   <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+  <!-- Google Model Viewer for interactive 3D modals -->
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
 
   <!-- Custom Stylesheet -->
   <link rel="stylesheet" href="style.css">
@@ -80,9 +82,43 @@
     renderer="logarithmicDepthBuffer: true; colorManagement: true;">
     
     <!-- Camera is standard static camera that supports WebAR controls -->
-    <a-entity camera></a-entity>
+    <a-entity camera>
+      <a-cursor raycaster="objects: a-image, a-entity" cursor="fuse: false" visible="false"></a-cursor>
+    </a-entity>
     
   </a-scene>
+
+  <!-- Full Screen Interior Choza Overlay -->
+  <div id="interior-overlay" class="interior-overlay">
+    <!-- Fullscreen background container -->
+    <div id="interior-bg" class="interior-bg"></div>
+    
+    <!-- Table overlayed at the bottom -->
+    <div class="table-container">
+      <img src="assets/entorno/mesa.png" id="mesa-img" class="mesa-img" alt="Mesa">
+      <!-- Valdivia image button sitting on the table -->
+      <img src="assets/models/valdivia.png" id="valdivia-btn" class="valdivia-btn interactive" alt="Vasija Valdivia">
+    </div>
+
+    <!-- 3D Model Viewer Modal (Hidden by default) -->
+    <div id="model-modal" class="model-modal glass">
+      <button id="close-modal-btn" class="btn-secondary interactive">Cerrar</button>
+      <div class="model-viewer-container">
+        <!-- Google Model Viewer -->
+        <model-viewer 
+          id="valdivia-viewer"
+          src="assets/models/valdivia.glb"
+          camera-controls
+          auto-rotate
+          ar
+          shadow-intensity="1"
+          alt="Modelo 3D de Valdivia">
+        </model-viewer>
+      </div>
+      <div class="modal-title">Estatuilla Valdivia</div>
+      <div class="modal-desc">Figura cerámica de la cultura Valdivia, representando la fertilidad y el arte precolombino.</div>
+    </div>
+  </div>
 
   <!-- Control App Script -->
   <script src="app.js"></script>
