@@ -459,7 +459,7 @@ video {
   width: 100%;
   height: auto;
   object-fit: contain;
-  transform: translateY(50%); /* Pushes the bottom half off-screen */
+  margin-bottom: -2px; /* Slight overlap with the bottom of the screen */
   pointer-events: none;
 }
 

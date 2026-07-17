@@ -386,7 +386,7 @@ function showInteriorOverlay() {
   
   if (interiorOverlay) {
     interiorOverlay.style.display = 'block';
-    interiorBg.style.backgroundImage = "url('assets/img/interiorchoza.png')";
+    interiorBg.style.backgroundImage = "url('assets/img/interiorchoza.webp')";
     state.interiorActive = true;
   }
 }
