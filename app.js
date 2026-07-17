@@ -14,7 +14,9 @@ const state = {
       markerPreset: 'hiro',
       type: 'image',
       url: 'assets/img/choza.png',
-      scale: '3.55 1.5 1',
+      width: 2.37,
+      height: 1,
+      scale: '1.5 1.5 1.5',
       position: '0 0.01 0',
       rotation: '-90 0 0',
       emoji: '🛖'
@@ -131,6 +133,8 @@ function setupScene() {
   if (modelConfig.type === 'image') {
     modelEl = document.createElement('a-image');
     modelEl.setAttribute('src', modelConfig.url);
+    if (modelConfig.width) modelEl.setAttribute('width', modelConfig.width);
+    if (modelConfig.height) modelEl.setAttribute('height', modelConfig.height);
   } else {
     modelEl = document.createElement('a-entity');
     modelEl.setAttribute('gltf-model', `url(${modelConfig.modelUrl})`);
@@ -259,6 +263,8 @@ function anchorModel() {
   
   if (activeModel.type === 'image') {
     staticModel.setAttribute('src', activeModel.url);
+    if (activeModel.width) staticModel.setAttribute('width', activeModel.width);
+    if (activeModel.height) staticModel.setAttribute('height', activeModel.height);
   } else {
     staticModel.setAttribute('gltf-model', `url(${activeModel.modelUrl})`);
   }
