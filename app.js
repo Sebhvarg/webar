@@ -1,3 +1,12 @@
+// Register Service Worker for offline capability
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then((reg) => console.log('Service Worker registrado con éxito:', reg.scope))
+      .catch((err) => console.error('Error al registrar el Service Worker:', err));
+  });
+}
+
 // Application State & WebAR Control Logic
 
 const state = {
@@ -28,7 +37,7 @@ const state = {
     spaceship: {
       name: 'Nave Espacial',
       markerPreset: 'kanji',
-      modelUrl: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Duck/glTF-Binary/Duck.glb', // A nice simple duck glb as fallback spaceship, or we can use another gltf
+      modelUrl: 'assets/models/duck.glb',
       scale: '0.5 0.5 0.5',
       position: '0 0 0',
       rotation: '0 0 0',
@@ -412,7 +421,7 @@ function showInteriorOverlay() {
   
   if (interiorOverlay) {
     interiorOverlay.style.display = 'block';
-    interiorBg.style.backgroundImage = "url('assets/img/interiorchoza.png')";
+    interiorBg.style.backgroundImage = "url('assets/img/interiorchoza.webp')";
   }
 }
 
