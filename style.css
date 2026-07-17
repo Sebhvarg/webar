@@ -437,7 +437,7 @@ video {
 }
 
 .interior-bg.blurred {
-  filter: blur(12px) brightness(0.5);
+  filter: blur(5px) brightness(0.5);
 }
 
 .table-container {
@@ -534,21 +534,31 @@ model-viewer {
 }
 
 .modal-title {
-  font-size: 1.3rem;
-  font-weight: 700;
+  font-size: 1.35rem;
+  font-weight: 800;
   margin-bottom: 6px;
   text-align: center;
-  background: linear-gradient(to right, #fff, var(--text-secondary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #ffffff;
+  text-shadow: 
+    -1.5px -1.5px 0 #000,  
+     1.5px -1.5px 0 #000,
+    -1.5px  1.5px 0 #000,
+     1.5px  1.5px 0 #000,
+     0px 3px 6px rgba(0, 0, 0, 0.9);
 }
 
 .modal-desc {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
+  font-size: 0.9rem;
+  color: #ffffff;
   text-align: center;
-  line-height: 1.4;
+  line-height: 1.45;
   margin-bottom: 8px;
+  text-shadow: 
+    -1px -1px 0 #000,  
+     1px -1px 0 #000,
+    -1px  1px 0 #000,
+     1px  1px 0 #000,
+     0px 2px 4px rgba(0, 0, 0, 0.9);
 }
 
 #close-modal-btn {
