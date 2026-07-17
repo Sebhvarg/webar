@@ -251,6 +251,8 @@ deviceTiltBtn.addEventListener('click', () => {
   }
 });
 
+
+
 // A-Frame Custom Component to register events
 AFRAME.registerComponent('registerevents', {
   init: function () {

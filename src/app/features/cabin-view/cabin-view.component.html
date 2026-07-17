@@ -1,5 +1,5 @@
 <!-- Full Screen Interior Choza Overlay wrapped in Ionic App component -->
-<ion-app id="interior-overlay" class="interior-overlay" *ngIf="stateService.interiorActive$ | async">
+<ion-app id="interior-overlay" class="interior-overlay" *ngIf="stateService.interiorActive$ | async" style="display: block;">
   <!-- Fullscreen background container -->
   <div id="interior-bg" class="interior-bg" [style.backgroundImage]="'url(' + currentLayer.backgroundImage + ')'"></div>
   

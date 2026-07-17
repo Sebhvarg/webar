@@ -115,20 +115,7 @@ export class ArViewComponent implements OnInit, OnDestroy {
   }
 
   handleOrientation(event: DeviceOrientationEvent) {
-    if (!this.modelLoaded || this.modelAnchored) return;
-
-    const pitch = event.beta;
-    if (pitch === null) return;
-
-    if (this.initialPitch === null) {
-      this.initialPitch = pitch;
-      return;
-    }
-
-    const diff = Math.abs(pitch - this.initialPitch);
-    if (diff > this.tiltThreshold) {
-      this.anchorModel();
-    }
+    // Disabled automatic anchoring via tilt-up detection as requested.
   }
 
   onMarkerFound(event: CustomEvent) {
@@ -230,13 +217,21 @@ export class ArViewComponent implements OnInit, OnDestroy {
       staticModel.setAttribute('gltf-model', `url(${activeModel.modelUrl})`);
     }
 
-    staticModel.setAttribute('scale', `${worldScale.x} ${worldScale.y} ${worldScale.z}`);
+    // Use predefined scale from the configuration rather than worldScale to avoid tracking matrix distortion
+    staticModel.setAttribute('scale', activeModel.scale || '1.5 1.5 1.5');
     staticModel.setAttribute('position', `${worldPos.x} ${worldPos.y} ${worldPos.z}`);
     staticModel.classList.add('interactive');
     staticModel.addEventListener('click', this.startZoomAndFade.bind(this));
 
     sceneEl.appendChild(staticModel);
-    (staticModel as any).object3D.quaternion.copy(worldRot);
+
+    if (activeModel.type === 'image') {
+      // Explicitly set flat rotation so the image lies horizontal with correct proportions
+      // instead of relying on worldRot quaternion which can distort the image orientation
+      staticModel.setAttribute('rotation', activeModel.rotation || '-90 0 0');
+    } else {
+      (staticModel as any).object3D.quaternion.copy(worldRot);
+    }
 
     modelEl.setAttribute('visible', 'false');
     this.stateService.setModelAnchored(true);
@@ -321,5 +316,10 @@ export class ArViewComponent implements OnInit, OnDestroy {
   selectModel(modelId: string) {
     this.stateService.setActiveModelId(modelId);
     this.resetExperience();
+  }
+
+  getSelectorKeys(): string[] {
+    const inactiveKey = this.activeModelId === 'robot' ? 'spaceship' : 'robot';
+    return [inactiveKey, this.activeModelId, inactiveKey];
   }
 }

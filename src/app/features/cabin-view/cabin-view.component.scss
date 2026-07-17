@@ -1,23 +1,25 @@
+/* --- Full Screen Interior Choza Overlay & Interactive 3D Modal --- */
 .interior-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 150;
+  z-index: 150; /* Above A-Frame and HUD UI */
+  display: none; /* Controlled via JS */
   overflow: hidden;
 }
 
 .interior-bg {
   position: absolute;
   top: -15%;
-  left: -25%;
-  width: 150%;
-  height: 130%;
+  left: -25%; /* Generous margin on left/right */
+  width: 150%; /* Extended width to absorb horizontal translations */
+  height: 130%; /* Extended height to absorb vertical translations */
   background-size: cover;
   background-position: center;
   transition: filter 0.8s ease-in-out, transform 0.12s ease-out;
-  transform: scale(1.35);
+  transform: scale(1.35); /* Increased baseline scale padding to hide edges */
 }
 
 .table-container {
