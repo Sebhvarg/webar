@@ -12,7 +12,7 @@ const state = {
     robot: {
       name: 'Robot Imperial',
       markerPreset: 'hiro',
-      modelUrl: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/RobotExpressive/glTF-Binary/RobotExpressive.glb',
+      modelUrl: 'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/RobotExpressive/RobotExpressive.glb',
       scale: '0.3 0.3 0.3',
       position: '0 0 0',
       rotation: '0 180 0',
@@ -21,7 +21,7 @@ const state = {
     spaceship: {
       name: 'Nave Espacial',
       markerPreset: 'kanji',
-      modelUrl: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF-Binary/Duck.glb', // A nice simple duck glb as fallback spaceship, or we can use another gltf
+      modelUrl: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Duck/glTF-Binary/Duck.glb', // A nice simple duck glb as fallback spaceship, or we can use another gltf
       scale: '0.5 0.5 0.5',
       position: '0 0 0',
       rotation: '0 0 0',
