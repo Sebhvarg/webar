@@ -1,0 +1,51 @@
+<!-- Real-Time UI overlay -->
+<div id="ui-container" *ngIf="!(stateService.interiorActive$ | async)">
+  <!-- Top Bar Status info -->
+  <div class="ar-header">
+    <div class="badge glass">
+      <span id="status-dot" class="status-dot" [class.active]="statusDotActive"></span>
+      <span id="status-text">{{ statusText }}</span>
+    </div>
+    <button id="reset-btn" class="btn-secondary interactive" (click)="resetExperience()">Reiniciar</button>
+  </div>
+
+  <!-- Instruction Banner -->
+  <div id="instruction-banner" class="instruction-banner glass" [class.visible]="showInstructionBanner">
+    <div id="instruction-title" class="instruction-text">{{ instructionTitle }}</div>
+    <div id="instruction-desc" class="instruction-subtext">{{ instructionDesc }}</div>
+    <div class="action-btn-container">
+      <button id="device-tilt-btn" class="btn-secondary interactive" style="background: var(--primary); border: none; margin-top: 8px;" (click)="anchorModel()">Ya lo moví</button>
+    </div>
+  </div>
+
+  <!-- Bottom Selection Bar -->
+  <div class="selector-container">
+    <div class="selector-title">Selecciona un modelo</div>
+    <div id="model-list" class="model-list">
+      <div 
+        *ngFor="let key of ['robot', 'spaceship']"
+        class="model-card glass interactive" 
+        [class.active]="activeModelId === key"
+        (click)="selectModel(key)">
+        <div class="model-icon">{{ stateService.models[key].emoji }}</div>
+        <div class="model-name">{{ stateService.models[key].name }}</div>
+        <div class="model-marker-info">Marcador: {{ stateService.models[key].markerPreset.toUpperCase() }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="start-overlay" *ngIf="!(stateService.arStarted$ | async)">
+  <div class="welcome-card glass">
+    <div class="logo-container">
+      <svg viewBox="0 0 24 24">
+        <path d="M12,2L1,8.3v7.4L12,22l11-6.3V8.3L12,2z M12,4.4l8.3,4.8L12,14L3.7,9.2L12,4.4z M3,14.5v-4.3l8,4.6v4.3L3,14.5z M21,14.5l-8,4.6v-4.3l8-4.6V14.5z"/>
+      </svg>
+    </div>
+    <h1>RealAlto WebAR</h1>
+    <p class="subtitle">Explora modelos 3D interactivos fijados en tu espacio real con marcadores aumentados.</p>
+    <button id="start-btn" class="btn-primary interactive" (click)="startAR()">
+      <span>Iniciar Experiencia AR</span>
+    </button>
+  </div>
+</div>

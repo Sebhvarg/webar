@@ -4,6 +4,18 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js')
       .then((reg) => console.log('Service Worker registrado con éxito:', reg.scope))
       .catch((err) => console.error('Error al registrar el Service Worker:', err));
+
+    // Desvanecer la pantalla de carga (Fade out loading screen)
+    const loadingScreen = document.getElementById('loading-screen');
+    if (loadingScreen) {
+      setTimeout(() => {
+        loadingScreen.style.opacity = '0';
+        loadingScreen.style.pointerEvents = 'none';
+        setTimeout(() => {
+          loadingScreen.style.display = 'none';
+        }, 800); // Coincide con la transición CSS
+      }, 1500); // Retraso de 1.5s para apreciar la animación premium
+    }
   });
 }
 
@@ -21,6 +33,35 @@ const state = {
   initialParallaxSaved: false, // Baseline calibration
   initialGamma: 0,
   initialBeta: 0,
+  // Layer-based Experience Data Pattern
+  layers: [
+    {
+      id: 'layer_choza',
+      name: 'Entorno Choza',
+      mainImage: 'assets/img/choza.webp',
+      backgroundImage: 'assets/img/interiorchoza.webp',
+      foregroundImage: 'assets/entorno/mesa.png',
+      // Horizontal elements containing glb files & matching representative png button images
+      elements: [
+        {
+          id: 'valdivia',
+          name: 'Estatuilla Valdivia',
+          glb: 'assets/models/valdivia.glb',
+          png: 'assets/models/valdivia.png',
+          desc: 'Figura cerámica de la cultura Valdivia, representando la fertilidad y el arte precolombino.'
+        },
+        {
+          id: 'pato',
+          name: 'Pato Silbato',
+          glb: 'assets/models/duck.glb',
+          png: 'assets/models/valdivia.png', // Fallback or placeholder png
+          desc: 'Instrumento ceremonial musical zoomorfo recreado en modelado 3D.'
+        }
+      ]
+    }
+  ],
+  activeLayerIndex: 0,
+  activeElementId: 'valdivia',
   models: {
     robot: {
       name: 'Choza RealAlto',
@@ -395,7 +436,7 @@ function startZoomAndFade(event) {
 function showInteriorOverlay() {
   state.interiorActive = true;
   state.initialParallaxSaved = false; // Reset baseline calibration for the transition
-
+ 
   // Hide UI HUD and A-Frame scene
   const uiContainer = document.getElementById('ui-container');
   const sceneEl = document.querySelector('a-scene');
@@ -418,31 +459,81 @@ function showInteriorOverlay() {
   // Display fullscreen interior overlay
   const interiorOverlay = document.getElementById('interior-overlay');
   const interiorBg = document.getElementById('interior-bg');
+  const mesaImg = document.getElementById('mesa-img');
+  const currentLayer = state.layers[state.activeLayerIndex];
   
   if (interiorOverlay) {
     interiorOverlay.style.display = 'block';
-    interiorBg.style.backgroundImage = "url('assets/img/interiorchoza.webp')";
+    if (interiorBg) {
+      interiorBg.style.backgroundImage = `url('${currentLayer.backgroundImage}')`;
+    }
+    if (mesaImg) {
+      mesaImg.src = currentLayer.foregroundImage;
+    }
+    
+    // Render the layer's interactive elements
+    renderLayerElements();
   }
 }
 
 // Setup Interior Overlay Interactive Actions
-document.addEventListener('DOMContentLoaded', () => {
-  const valdiviaBtn = document.getElementById('valdivia-btn');
-  const closeModalBtn = document.getElementById('close-modal-btn');
-  const interiorBg = document.getElementById('interior-bg');
-  const modelModal = document.getElementById('model-modal');
-
-  if (valdiviaBtn) {
-    valdiviaBtn.addEventListener('click', () => {
-      interiorBg.classList.add('blurred');
-      modelModal.classList.add('visible');
+// Render layered horizontal element buttons sitting on the table
+function renderLayerElements() {
+  const container = document.getElementById('elements-horizontal-container');
+  if (!container) return;
+  container.innerHTML = '';
+  
+  const currentLayer = state.layers[state.activeLayerIndex];
+  
+  currentLayer.elements.forEach(element => {
+    const imgBtn = document.createElement('img');
+    imgBtn.src = element.png;
+    imgBtn.className = `valdivia-btn interactive ${state.activeElementId === element.id ? 'active' : ''}`;
+    imgBtn.alt = element.name;
+    imgBtn.dataset.id = element.id;
+    
+    // Custom inline positions to spread elements horizontally
+    imgBtn.addEventListener('click', () => {
+      openElementModal(element);
     });
-  }
+    
+    container.appendChild(imgBtn);
+  });
+}
 
-  if (closeModalBtn) {
+// Open Ionic Modal with selected element data
+function openElementModal(element) {
+  state.activeElementId = element.id;
+  
+  const modelModal = document.getElementById('model-modal');
+  const viewer = document.getElementById('valdivia-viewer');
+  const title = document.getElementById('modal-title');
+  const desc = document.getElementById('modal-desc');
+  const ionTitle = document.getElementById('modal-ion-title');
+  const interiorBg = document.getElementById('interior-bg');
+  
+  if (viewer) viewer.setAttribute('src', element.glb);
+  if (title) title.textContent = element.name;
+  if (desc) desc.textContent = element.desc;
+  if (ionTitle) ionTitle.textContent = element.name;
+  
+  if (interiorBg) interiorBg.classList.add('blurred');
+  
+  // Present Ionic modal
+  if (modelModal) {
+    modelModal.present();
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const closeModalBtn = document.getElementById('close-modal-btn');
+  const modelModal = document.getElementById('model-modal');
+  const interiorBg = document.getElementById('interior-bg');
+
+  if (closeModalBtn && modelModal) {
     closeModalBtn.addEventListener('click', () => {
-      modelModal.classList.remove('visible');
-      interiorBg.classList.remove('blurred');
+      modelModal.dismiss();
+      if (interiorBg) interiorBg.classList.remove('blurred');
     });
   }
 });

@@ -19,8 +19,21 @@
 
   <!-- Custom Stylesheet -->
   <link rel="stylesheet" href="style.css">
+  
+  <!-- Ionic CDN for layering/tabs structure -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css" />
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
+  <script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
 </head>
 <body style="margin: 0; overflow: hidden;">
+
+  <!-- Pantalla de Carga (Loading Screen) -->
+  <div id="loading-screen">
+    <div class="loading-logo-container">
+      <img src="assets/img/logo.webp" alt="Real Alto Logo" class="loading-logo" onerror="this.onerror=null; this.src='assets/img/logo.webpn';">
+      <div class="spinner"></div>
+    </div>
+  </div>
 
   <!-- Welcome / Intro Screen -->
   <div id="welcome-screen">
@@ -88,37 +101,51 @@
     
   </a-scene>
 
-  <!-- Full Screen Interior Choza Overlay -->
-  <div id="interior-overlay" class="interior-overlay">
+  <!-- Full Screen Interior Choza Overlay wrapped in an Ionic App component -->
+  <ion-app id="interior-overlay" class="interior-overlay">
     <!-- Fullscreen background container -->
     <div id="interior-bg" class="interior-bg"></div>
     
     <!-- Table overlayed at the bottom -->
     <div class="table-container">
       <img src="assets/entorno/mesa.png" id="mesa-img" class="mesa-img" alt="Mesa">
-      <!-- Valdivia image button sitting on the table -->
-      <img src="assets/models/valdivia.png" id="valdivia-btn" class="valdivia-btn interactive" alt="Vasija Valdivia">
+      
+      <!-- Horizontal list of elements on the table -->
+      <div id="elements-horizontal-container" class="elements-horizontal-container interactive">
+        <!-- Dynamically rendered element buttons will go here -->
+      </div>
     </div>
 
-    <!-- 3D Model Viewer Modal (Hidden by default) -->
-    <div id="model-modal" class="model-modal glass">
-      <button id="close-modal-btn" class="btn-secondary interactive">Cerrar</button>
-      <div class="model-viewer-container">
-        <!-- Google Model Viewer -->
-        <model-viewer 
-          id="valdivia-viewer"
-          src="assets/models/valdivia.glb"
-          camera-controls
-          auto-rotate
-          ar
-          shadow-intensity="1"
-          alt="Modelo 3D de Valdivia">
-        </model-viewer>
-      </div>
-      <div class="modal-title">Estatuilla Valdivia</div>
-      <div class="modal-desc">Figura cerámica de la cultura Valdivia, representando la fertilidad y el arte precolombino.</div>
-    </div>
-  </div>
+    <!-- 3D Model Viewer Modal using ion-modal -->
+    <ion-modal id="model-modal" class="model-modal-ionic">
+      <ion-header>
+        <ion-toolbar color="dark">
+          <ion-title id="modal-ion-title">Detalle del Elemento</ion-title>
+          <ion-buttons slot="end">
+            <ion-button id="close-modal-btn">Cerrar</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content color="dark" class="ion-padding">
+        <div class="model-viewer-container">
+          <!-- Google Model Viewer -->
+          <model-viewer 
+            id="valdivia-viewer"
+            src=""
+            camera-controls
+            auto-rotate
+            ar
+            shadow-intensity="1"
+            alt="Modelo 3D">
+          </model-viewer>
+        </div>
+        <div class="modal-info-card">
+          <h2 id="modal-title" class="modal-title">Título</h2>
+          <p id="modal-desc" class="modal-desc">Descripción detallada</p>
+        </div>
+      </ion-content>
+    </ion-modal>
+  </ion-app>
 
   <!-- Control App Script -->
   <script src="app.js"></script>

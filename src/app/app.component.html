@@ -1,0 +1,55 @@
+<ion-app>
+  <!-- Pantalla de Carga (Loading Screen) -->
+  <div id="loading-screen" *ngIf="showLoadingScreen">
+    <div class="loading-logo-container">
+      <img src="assets/img/logo.webp" alt="Real Alto Logo" class="loading-logo" onerror="this.onerror=null; this.src='assets/img/logo.webpn';">
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+  <!-- Interactive A-Frame Scene -->
+  <a-scene 
+    embedded 
+    arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
+    vr-mode-ui="enabled: false"
+    renderer="logarithmicDepthBuffer: true; colorManagement: true;">
+    
+    <a-assets>
+      <img id="choza-img" src="assets/img/choza.webp">
+    </a-assets>
+
+    <!-- Marcador Hiro para la Choza -->
+    <a-marker id="marker-hiro" preset="hiro" registerevents>
+      <a-image 
+        id="ar-model" 
+        src="#choza-img" 
+        scale="1.5 1.5 1.5" 
+        position="0 0.01 0" 
+        rotation="-90 0 0" 
+        class="interactive">
+      </a-image>
+    </a-marker>
+
+    <!-- Marcador Kanji para la Nave/Pato -->
+    <a-marker id="marker-kanji" preset="kanji" registerevents>
+      <a-entity 
+        id="ar-model-kanji" 
+        gltf-model="url(assets/models/duck.glb)" 
+        scale="0.5 0.5 0.5" 
+        position="0 0 0" 
+        rotation="0 0 0" 
+        class="interactive">
+      </a-entity>
+    </a-marker>
+    
+    <a-entity camera>
+      <a-cursor raycaster="objects: a-image, a-entity" cursor="fuse: false" visible="false"></a-cursor>
+    </a-entity>
+  </a-scene>
+
+  <!-- AR Experience Overlay Page -->
+  <app-ar-view></app-ar-view>
+
+  <!-- Gyroscopic Cabin Experience Overlay -->
+  <app-cabin-view></app-cabin-view>
+</ion-app>

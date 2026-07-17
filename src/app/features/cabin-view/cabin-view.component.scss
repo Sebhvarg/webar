@@ -1,0 +1,117 @@
+.interior-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 150;
+  overflow: hidden;
+}
+
+.interior-bg {
+  position: absolute;
+  top: -15%;
+  left: -25%;
+  width: 150%;
+  height: 130%;
+  background-size: cover;
+  background-position: center;
+  transition: filter 0.8s ease-in-out, transform 0.12s ease-out;
+  transform: scale(1.35);
+}
+
+.table-container {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 600px;
+  height: 40%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  pointer-events: none;
+  z-index: 152;
+}
+
+.mesa-img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  margin-bottom: -1.5px;
+  pointer-events: none;
+}
+
+.elements-horizontal-container {
+  position: absolute;
+  bottom: 25%;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 0 20px;
+  z-index: 153;
+  pointer-events: auto;
+}
+
+.valdivia-btn {
+  width: clamp(80px, 20vw, 120px);
+  height: auto;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.6));
+}
+
+.valdivia-btn:hover, .valdivia-btn.active {
+  transform: scale(1.15) translateY(-5px);
+  filter: drop-shadow(0 12px 20px rgba(99, 102, 241, 0.8));
+}
+
+.valdivia-btn:active {
+  transform: scale(0.95);
+}
+
+.model-modal-ionic {
+  --background: transparent;
+  --height: 80%;
+  --width: 90%;
+  --max-width: 460px;
+  --border-radius: 20px;
+  --box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.model-viewer-container {
+  width: 100%;
+  height: 250px;
+  background: transparent !important;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  position: relative;
+  border: none !important;
+}
+
+model-viewer {
+  width: 100%;
+  height: 100%;
+}
+
+.modal-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+  text-align: center;
+  color: #ffffff;
+}
+
+.modal-desc {
+  font-size: 0.9rem;
+  color: #cccccc;
+  text-align: center;
+  line-height: 1.45;
+  margin-bottom: 8px;
+}
