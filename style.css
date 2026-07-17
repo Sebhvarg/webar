@@ -587,3 +587,30 @@ model-viewer {
   }
 }
 
+/* Floating Screenshot/Photo Button inside 3D viewer container */
+.screenshot-btn {
+  position: absolute !important;
+  bottom: 12px !important;
+  right: 12px !important;
+  width: auto !important;
+  padding: 8px 16px !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  border-radius: 10px !important;
+  z-index: 15 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  box-shadow: 0 4px 10px rgba(99, 102, 241, 0.4) !important;
+}
+
+.screenshot-btn svg {
+  stroke-width: 2.5px;
+}
+
+.screenshot-btn:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 14px rgba(99, 102, 241, 0.6) !important;
+}
+
+

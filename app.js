@@ -412,7 +412,7 @@ function showInteriorOverlay() {
   
   if (interiorOverlay) {
     interiorOverlay.style.display = 'block';
-    interiorBg.style.backgroundImage = "url('assets/img/interiorchoza.webp')";
+    interiorBg.style.backgroundImage = "url('assets/img/interiorchoza.png')";
   }
 }
 
@@ -422,6 +422,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeModalBtn = document.getElementById('close-modal-btn');
   const interiorBg = document.getElementById('interior-bg');
   const modelModal = document.getElementById('model-modal');
+  const screenshotBtn = document.getElementById('screenshot-btn');
+  const viewer = document.getElementById('valdivia-viewer');
 
   if (valdiviaBtn) {
     valdiviaBtn.addEventListener('click', () => {
@@ -434,6 +436,33 @@ document.addEventListener('DOMContentLoaded', () => {
     closeModalBtn.addEventListener('click', () => {
       modelModal.classList.remove('visible');
       interiorBg.classList.remove('blurred');
+    });
+  }
+
+  if (screenshotBtn && viewer) {
+    screenshotBtn.addEventListener('click', async () => {
+      try {
+        // Capture snapshot from model-viewer canvas
+        const blob = await viewer.toBlob({
+          mimeType: 'image/png',
+          idealAspect: true
+        });
+        
+        // Trigger download
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'valdivia_captura.png';
+        document.body.appendChild(a);
+        a.click();
+        
+        // Cleanup resources
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error("Error capturing snapshot:", error);
+        alert("Tu dispositivo o navegador no admite la captura directa desde el visualizador 3D.");
+      }
     });
   }
 });
