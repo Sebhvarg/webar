@@ -17,7 +17,7 @@ const state = {
       name: 'Choza RealAlto',
       markerPreset: 'hiro',
       type: 'image',
-      url: 'assets/img/choza.png',
+      url: 'assets/img/choza.webp',
       width: 2.37,
       height: 1,
       scale: '1.5 1.5 1.5',
@@ -50,8 +50,21 @@ const resetBtn = document.getElementById('reset-btn');
 const deviceTiltBtn = document.getElementById('device-tilt-btn');
 
 // Start AR Experience
-startBtn.addEventListener('click', async () => {
-  // Request Device Orientation permission if on iOS 13+
+startBtn.addEventListener('click', () => {
+  // 1. Hide welcome screen immediately
+  welcomeScreen.style.opacity = '0';
+  setTimeout(() => {
+    welcomeScreen.style.display = 'none';
+  }, 500);
+
+  // 2. Initialize AR.js Scene immediately
+  initializeAR();
+
+  // 3. Request permissions in the background without blocking the UI/Camera load
+  requestSensorPermissions();
+});
+
+async function requestSensorPermissions() {
   if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
     try {
       const permissionState = await DeviceOrientationEvent.requestPermission();
@@ -68,16 +81,7 @@ startBtn.addEventListener('click', async () => {
     window.addEventListener('deviceorientation', handleParallax);
     window.addEventListener('deviceorientationabsolute', handleParallax);
   }
-
-  // Hide welcome screen and show AR elements
-  welcomeScreen.style.opacity = '0';
-  setTimeout(() => {
-    welcomeScreen.style.display = 'none';
-  }, 500);
-
-  // Initialize AR.js Scene
-  initializeAR();
-});
+}
 
 function initializeAR() {
   state.arStarted = true;
@@ -408,7 +412,7 @@ function showInteriorOverlay() {
   
   if (interiorOverlay) {
     interiorOverlay.style.display = 'block';
-    interiorBg.style.backgroundImage = "url('assets/img/interiorchoza.png')";
+    interiorBg.style.backgroundImage = "url('assets/img/interiorchoza.webp')";
   }
 }
 
@@ -490,7 +494,7 @@ let startTouchY = 0;
 let baseOffsetX = 0;
 let baseOffsetY = 0;
 
-document.addEventListener('DOMContentLoaded', () => {
+function setupInteriorControls() {
   const overlay = document.getElementById('interior-overlay');
 
   if (overlay) {
@@ -542,7 +546,13 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', setupInteriorControls);
+} else {
+  setupInteriorControls();
+}
 
 // Initialize selector on page load
 buildSelectorUI();
