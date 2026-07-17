@@ -10,13 +10,14 @@ const state = {
   tiltThreshold: 15, // Degrees tilt up to trigger anchor
   models: {
     robot: {
-      name: 'Robot Imperial',
+      name: 'Choza RealAlto',
       markerPreset: 'hiro',
-      modelUrl: 'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/RobotExpressive/RobotExpressive.glb',
-      scale: '0.3 0.3 0.3',
-      position: '0 0 0',
-      rotation: '0 180 0',
-      emoji: '🤖'
+      type: 'image',
+      url: 'assets/img/choza.png',
+      scale: '2 2 2',
+      position: '0 0.5 0',
+      rotation: '0 0 0',
+      emoji: '🛖'
     },
     spaceship: {
       name: 'Nave Espacial',
@@ -125,18 +126,25 @@ function setupScene() {
   currentMarker.setAttribute('preset', modelConfig.markerPreset);
   currentMarker.setAttribute('registerevents', '');
 
-  // Add the 3D model entity
-  const modelEl = document.createElement('a-entity');
+  // Add the 3D model or 2D image entity
+  let modelEl;
+  if (modelConfig.type === 'image') {
+    modelEl = document.createElement('a-image');
+    modelEl.setAttribute('src', modelConfig.url);
+  } else {
+    modelEl = document.createElement('a-entity');
+    modelEl.setAttribute('gltf-model', `url(${modelConfig.modelUrl})`);
+    
+    // Add animation mixing to model if robot is expressive
+    if (state.activeModelId === 'robot') {
+      modelEl.setAttribute('animation-mixer', 'clip: Idle; loop: repeat');
+    }
+  }
+  
   modelEl.setAttribute('id', 'ar-model');
-  modelEl.setAttribute('gltf-model', `url(${modelConfig.modelUrl})`);
   modelEl.setAttribute('scale', modelConfig.scale);
   modelEl.setAttribute('position', modelConfig.position);
   modelEl.setAttribute('rotation', modelConfig.rotation);
-  
-  // Add animation mixing to model if robot is expressive
-  if (state.activeModelId === 'robot') {
-    modelEl.setAttribute('animation-mixer', 'clip: Idle; loop: repeat');
-  }
 
   currentMarker.appendChild(modelEl);
   sceneEl.appendChild(currentMarker);
@@ -245,9 +253,15 @@ function anchorModel() {
   modelEl.object3D.getWorldScale(worldScale);
 
   // Create a new static model outside of the marker parent, directly in the scene
-  const staticModel = document.createElement('a-entity');
+  const activeModel = state.models[state.activeModelId];
+  const staticModel = document.createElement(activeModel.type === 'image' ? 'a-image' : 'a-entity');
   staticModel.setAttribute('id', 'anchored-model');
-  staticModel.setAttribute('gltf-model', `url(${state.models[state.activeModelId].modelUrl})`);
+  
+  if (activeModel.type === 'image') {
+    staticModel.setAttribute('src', activeModel.url);
+  } else {
+    staticModel.setAttribute('gltf-model', `url(${activeModel.modelUrl})`);
+  }
   
   // Set scale
   staticModel.setAttribute('scale', `${worldScale.x} ${worldScale.y} ${worldScale.z}`);
