@@ -54,12 +54,14 @@ startBtn.addEventListener('click', async () => {
       const permissionState = await DeviceOrientationEvent.requestPermission();
       if (permissionState === 'granted') {
         window.addEventListener('deviceorientation', handleOrientation);
+        window.addEventListener('deviceorientation', handleParallax);
       }
     } catch (error) {
       console.warn("Could not request DeviceOrientation permission:", error);
     }
   } else {
     window.addEventListener('deviceorientation', handleOrientation);
+    window.addEventListener('deviceorientation', handleParallax);
   }
 
   // Hide welcome screen and show AR elements
@@ -414,8 +416,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Gyroscope-based Parallax tilt effect for interior background
-window.addEventListener('deviceorientation', (event) => {
-  if (!state.interiorActive) return;
+function handleParallax(event) {
+  if (!state.interiorActive || isDragging) return; // Skip if touch dragging
 
   const tiltX = event.gamma; // Left/Right tilt [-90, 90]
   const tiltY = event.beta;  // Front/Back tilt [-180, 180]
@@ -431,13 +433,73 @@ window.addEventListener('deviceorientation', (event) => {
   const targetY = -((tiltY - 75) / 25) * maxOffsetY;
 
   // Clamp boundaries to prevent image edges from showing
-  const clampedX = Math.max(-maxOffsetX, Math.min(maxOffsetX, targetX));
-  const clampedY = Math.max(-maxOffsetY, Math.min(maxOffsetY, targetY));
+  baseOffsetX = Math.max(-maxOffsetX, Math.min(maxOffsetX, targetX));
+  baseOffsetY = Math.max(-maxOffsetY, Math.min(maxOffsetY, targetY));
 
   const interiorBg = document.getElementById('interior-bg');
   if (interiorBg) {
-    // translate is applied alongside baseline scale
-    interiorBg.style.transform = `translate(${clampedX}px, ${clampedY}px) scale(1.1)`;
+    interiorBg.style.transform = `translate(${baseOffsetX}px, ${baseOffsetY}px) scale(1.1)`;
+  }
+}
+
+// Touch controls fallback/complement for swiping the cabin view
+let isDragging = false;
+let startTouchX = 0;
+let startTouchY = 0;
+let baseOffsetX = 0;
+let baseOffsetY = 0;
+
+document.addEventListener('DOMContentLoaded', () => {
+  const overlay = document.getElementById('interior-overlay');
+
+  if (overlay) {
+    overlay.addEventListener('touchstart', (e) => {
+      if (!state.interiorActive) return;
+      isDragging = true;
+      startTouchX = e.touches[0].clientX;
+      startTouchY = e.touches[0].clientY;
+    }, { passive: true });
+
+    overlay.addEventListener('touchmove', (e) => {
+      if (!isDragging || !state.interiorActive) return;
+      
+      const currentX = e.touches[0].clientX;
+      const currentY = e.touches[0].clientY;
+      
+      // Calculate touch offset delta
+      const deltaX = currentX - startTouchX;
+      const deltaY = currentY - startTouchY;
+      
+      const maxOffsetX = 150;
+      const maxOffsetY = 30;
+      
+      // Compute target coordinates
+      const targetX = baseOffsetX + deltaX * 1.5; // Touch sensitivity factor
+      const targetY = baseOffsetY + deltaY * 1.5;
+      
+      // Clamp coordinates
+      const clampedX = Math.max(-maxOffsetX, Math.min(maxOffsetX, targetX));
+      const clampedY = Math.max(-maxOffsetY, Math.min(maxOffsetY, targetY));
+      
+      const interiorBg = document.getElementById('interior-bg');
+      if (interiorBg) {
+        interiorBg.style.transform = `translate(${clampedX}px, ${clampedY}px) scale(1.1)`;
+      }
+    }, { passive: true });
+
+    overlay.addEventListener('touchend', () => {
+      if (!isDragging) return;
+      isDragging = false;
+      
+      // Persist values after touch ends
+      const interiorBg = document.getElementById('interior-bg');
+      if (interiorBg) {
+        const style = window.getComputedStyle(interiorBg);
+        const matrix = new WebKitCSSMatrix(style.transform);
+        baseOffsetX = matrix.m41;
+        baseOffsetY = matrix.m42;
+      }
+    });
   }
 });
 
