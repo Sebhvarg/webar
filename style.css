@@ -427,13 +427,13 @@ video {
 .interior-bg {
   position: absolute;
   top: -5%;
-  left: -5%;
-  width: 110%;
+  left: -20%; /* More side padding for wide horizontal movement */
+  width: 140%; /* Expanded width to allow wide lateral translation */
   height: 110%;
   background-size: cover;
   background-position: center;
-  transition: filter 0.8s ease-in-out, transform 0.15s ease-out;
-  transform: scale(1.15); /* Baseline zoom for padding */
+  transition: filter 0.8s ease-in-out, transform 0.12s ease-out;
+  transform: scale(1.1); /* Baseline scale padding */
 }
 
 .interior-bg.blurred {

@@ -423,18 +423,21 @@ window.addEventListener('deviceorientation', (event) => {
   if (tiltX === null || tiltY === null) return;
 
   // Base portrait holding angles: gamma = 0, beta = 75
-  const maxOffset = 50; // max shift in pixels
-  const targetX = -(tiltX / 30) * maxOffset;
-  const targetY = -((tiltY - 75) / 25) * maxOffset;
+  const maxOffsetX = 150; // Much wider horizontal range for panning the hut
+  const maxOffsetY = 30;  // Subtle vertical range to prevent vertical clipping
+  
+  // High sensitivity for horizontal tilt (gamma)
+  const targetX = -(tiltX / 18) * maxOffsetX;
+  const targetY = -((tiltY - 75) / 25) * maxOffsetY;
 
   // Clamp boundaries to prevent image edges from showing
-  const clampedX = Math.max(-maxOffset, Math.min(maxOffset, targetX));
-  const clampedY = Math.max(-maxOffset, Math.min(maxOffset, targetY));
+  const clampedX = Math.max(-maxOffsetX, Math.min(maxOffsetX, targetX));
+  const clampedY = Math.max(-maxOffsetY, Math.min(maxOffsetY, targetY));
 
   const interiorBg = document.getElementById('interior-bg');
   if (interiorBg) {
-    // scale(1.15) provides extra padding room for movement without revealing borders
-    interiorBg.style.transform = `translate(${clampedX}px, ${clampedY}px) scale(1.15)`;
+    // translate is applied alongside baseline scale
+    interiorBg.style.transform = `translate(${clampedX}px, ${clampedY}px) scale(1.1)`;
   }
 });
 
