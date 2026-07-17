@@ -9,6 +9,9 @@ const state = {
   initialPitch: null,
   tiltThreshold: 15, // Degrees tilt up to trigger anchor
   interiorActive: false, // For gyroscope parallax effect
+  initialParallaxSaved: false, // Baseline calibration
+  initialGamma: 0,
+  initialBeta: 0,
   models: {
     robot: {
       name: 'Choza RealAlto',
@@ -378,6 +381,7 @@ function startZoomAndFade(event) {
 
 function showInteriorOverlay() {
   state.interiorActive = true;
+  state.initialParallaxSaved = false; // Reset baseline calibration for the transition
 
   // Hide UI HUD and A-Frame scene
   const uiContainer = document.getElementById('ui-container');
@@ -434,18 +438,40 @@ document.addEventListener('DOMContentLoaded', () => {
 function handleParallax(event) {
   if (!state.interiorActive || isDragging) return; // Skip if touch dragging
 
-  const tiltX = event.gamma; // Left/Right tilt [-90, 90]
-  const tiltY = event.beta;  // Front/Back tilt [-180, 180]
+  let rawGamma = event.gamma; // Roll [-90, 90]
+  let rawBeta = event.beta;   // Pitch [-180, 180]
 
-  if (tiltX === null || tiltY === null) return;
+  if (rawGamma === null || rawBeta === null) return;
 
-  // Base portrait holding angles: gamma = 0, beta = 75
-  const maxOffsetX = 150; // Much wider horizontal range for panning the hut
-  const maxOffsetY = 30;  // Subtle vertical range to prevent vertical clipping
+  // Calibrate baseline when first entering the interior
+  if (!state.initialParallaxSaved) {
+    state.initialGamma = rawGamma;
+    state.initialBeta = rawBeta;
+    state.initialParallaxSaved = true;
+    return;
+  }
+
+  // Calculate change relative to initial position
+  let diffX = rawGamma - state.initialGamma;
+  let diffY = rawBeta - state.initialBeta;
+
+  // Detect orientation to swap axes if in landscape mode
+  const orientationType = (screen.orientation && screen.orientation.type) || "";
+  const isLandscape = orientationType.includes("landscape") || window.innerWidth > window.innerHeight;
+
+  if (isLandscape) {
+    // In landscape: tilting the phone left/right moves the Pitch (beta),
+    // and tilting forward/backward moves the Roll (gamma).
+    diffX = rawBeta - state.initialBeta;
+    diffY = rawGamma - state.initialGamma;
+  }
+
+  const maxOffsetX = 150; // Horizontal range
+  const maxOffsetY = 30;  // Vertical range
   
-  // High sensitivity for horizontal tilt (gamma)
-  const targetX = -(tiltX / 18) * maxOffsetX;
-  const targetY = -((tiltY - 75) / 25) * maxOffsetY;
+  // Apply sensitivity scale factor
+  const targetX = -diffX * 4.5; 
+  const targetY = -diffY * 2.5;
 
   // Clamp boundaries to prevent image edges from showing
   baseOffsetX = Math.max(-maxOffsetX, Math.min(maxOffsetX, targetX));
