@@ -40,6 +40,7 @@ export class ArViewComponent implements OnInit, OnDestroy {
   showInstructionBanner: boolean = false;
   instructionTitle: string = 'MUEVA EL CELULAR HACIA ARRIBA';
   instructionDesc: string = 'Tensa el dispositivo hacia arriba para fijar el modelo en tu espacio.';
+  isLandscapeMode: boolean = true;
   
   private initialPitch: number | null = null;
   private tiltThreshold = 15;
@@ -47,10 +48,15 @@ export class ArViewComponent implements OnInit, OnDestroy {
 
   private boundMarkerFound = this.onMarkerFound.bind(this);
   private boundMarkerLost = this.onMarkerLost.bind(this);
+  private boundOrientationChange = this.handleOrientationRequirement.bind(this);
 
   constructor(public stateService: StateService) {}
 
   ngOnInit() {
+    this.handleOrientationRequirement();
+    window.addEventListener('resize', this.boundOrientationChange);
+    window.addEventListener('orientationchange', this.boundOrientationChange);
+
     window.addEventListener('ar-marker-found', this.boundMarkerFound as any);
     window.addEventListener('ar-marker-lost', this.boundMarkerLost as any);
 
@@ -85,6 +91,8 @@ export class ArViewComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.subscriptions.unsubscribe();
     window.removeEventListener('deviceorientation', this.handleOrientation);
+    window.removeEventListener('resize', this.boundOrientationChange);
+    window.removeEventListener('orientationchange', this.boundOrientationChange);
     window.removeEventListener('ar-marker-found', this.boundMarkerFound as any);
     window.removeEventListener('ar-marker-lost', this.boundMarkerLost as any);
   }
@@ -119,6 +127,14 @@ export class ArViewComponent implements OnInit, OnDestroy {
   }
 
   onMarkerFound(event: CustomEvent) {
+    if (!this.isLandscapeMode) {
+      this.stateService.setMarkerVisible(false);
+      this.stateService.setModelLoaded(false);
+      this.statusDotActive = false;
+      this.hideInstruction();
+      return;
+    }
+
     const markerId = event.detail.id;
     const modelConfig = this.stateService.models[this.activeModelId];
     const expectedMarkerId = `marker-${modelConfig.markerPreset}`;
@@ -128,10 +144,7 @@ export class ArViewComponent implements OnInit, OnDestroy {
       this.statusText = 'Marcador detectado';
       setTimeout(() => {
         this.stateService.setModelLoaded(true);
-        this.showInstruction(
-          'MUEVA EL CELULAR HACIA ARRIBA',
-          'Tensa el dispositivo hacia el cielo para fijar el modelo 3D.'
-        );
+        this.hideInstruction();
       }, 1000);
     }
   }
@@ -145,9 +158,38 @@ export class ArViewComponent implements OnInit, OnDestroy {
       this.stateService.setMarkerVisible(false);
       if (!this.modelAnchored) {
         this.statusText = 'Buscando marcador...';
-        this.hideInstruction();
+        if (this.activeModelId !== 'robot') {
+          this.hideInstruction();
+        }
       }
     }
+  }
+
+  private handleOrientationRequirement() {
+    this.isLandscapeMode = window.innerWidth > window.innerHeight;
+    if (!this.isLandscapeMode) {
+      this.statusDotActive = false;
+      this.statusText = 'Escaneo pausado';
+      this.hideInstruction();
+      this.stateService.setMarkerVisible(false);
+      this.stateService.setModelLoaded(false);
+      this.setupScene();
+      return;
+    }
+
+    this.statusDotActive = true;
+    const modelConfig = this.stateService.models[this.activeModelId];
+    this.statusText = `Escaneando marcador [${modelConfig.markerPreset.toUpperCase()}]`;
+    this.setupScene();
+  }
+
+  enterChoza() {
+    this.hideInstruction();
+    window.dispatchEvent(new CustomEvent('enter-choza-request'));
+  }
+
+  goToMainMenu() {
+    window.dispatchEvent(new CustomEvent('back-to-home-request'));
   }
 
   setupScene() {
@@ -155,6 +197,12 @@ export class ArViewComponent implements OnInit, OnDestroy {
     const markerHiro = document.getElementById('marker-hiro');
     const markerKanji = document.getElementById('marker-kanji');
     if (!markerHiro || !markerKanji) return;
+
+    if (!this.isLandscapeMode) {
+      markerHiro.setAttribute('visible', 'false');
+      markerKanji.setAttribute('visible', 'false');
+      return;
+    }
 
     if (this.activeModelId === 'robot') {
       markerHiro.setAttribute('visible', 'true');

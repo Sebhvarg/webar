@@ -5,7 +5,7 @@ app-ar-view, app-cabin-view {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 10;
+  z-index: 30;
   pointer-events: none;
 }
 
@@ -33,6 +33,63 @@ video {
 
 .a-enter-vr {
   display: none !important;
+}
+
+.fixed-choza-overlay {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100vw;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.fixed-choza-controls {
+  position: fixed;
+  left: 0;
+  bottom: clamp(64px, 12vh, 130px);
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  z-index: 45;
+  pointer-events: none;
+}
+
+.enter-choza-button {
+  pointer-events: auto;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 22px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.32);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+}
+
+.fixed-choza-image {
+  display: block;
+  width: 100vw;
+  height: auto;
+}
+
+.fixed-choza-image.zoom-enter {
+  animation: chozaZoomIn 1.7s ease-in forwards;
+  transform-origin: center bottom;
+}
+
+@keyframes chozaZoomIn {
+  0% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.9) translateY(-16vh);
+    opacity: 1;
+  }
 }
 
 /* Pantalla de Carga (Loading Screen) */

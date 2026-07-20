@@ -21,16 +21,6 @@
 
     <!-- Marcador Hiro para la Choza -->
     <a-marker id="marker-hiro" preset="hiro" registerevents>
-      <a-image 
-        id="ar-model" 
-        src="#choza-img" 
-        width="2.37"
-        height="1"
-        scale="1.5 1.5 1.5" 
-        position="0 0.01 0" 
-        rotation="-90 0 0" 
-        class="interactive">
-      </a-image>
     </a-marker>
 
     <!-- Marcador Kanji para la Nave/Pato -->
@@ -55,6 +45,14 @@
 
   <!-- AR Experience Overlay Page -->
   <app-ar-view *ngIf="stateService.arStarted$ | async"></app-ar-view>
+
+  <!-- Choza fija en pantalla completa al detectar Hiro -->
+  <div class="fixed-choza-overlay" *ngIf="(stateService.arStarted$ | async) && showFixedChoza">
+    <img src="assets/img/choza.webp" alt="Choza" class="fixed-choza-image">
+  </div>
+  <div class="fixed-choza-controls" *ngIf="(stateService.arStarted$ | async) && showFixedChoza">
+    <button class="enter-choza-button" (click)="enterChozaFromOverlay()">Entrar a la choza</button>
+  </div>
 
   <!-- Gyroscopic Cabin Experience Overlay -->
   <app-cabin-view *ngIf="stateService.arStarted$ | async"></app-cabin-view>

@@ -1,7 +1,8 @@
 <!-- Real-Time UI overlay -->
 <div id="ui-container" *ngIf="!(stateService.interiorActive$ | async)">
   <!-- Top Bar Status info -->
-  <div class="ar-header">
+  <div class="ar-header" *ngIf="isLandscapeMode">
+    <button id="back-home-btn" class="btn-secondary interactive" (click)="goToMainMenu()">Volver al menu</button>
     <div class="badge glass">
       <span id="status-dot" class="status-dot" [class.active]="statusDotActive"></span>
       <span id="status-text">{{ statusText }}</span>
@@ -9,44 +10,28 @@
     <button id="reset-btn" class="btn-secondary interactive" (click)="resetExperience()">Reiniciar</button>
   </div>
 
-  <!-- Instruction Banner -->
-  <div id="instruction-banner" class="instruction-banner glass" [class.visible]="showInstructionBanner">
-    <div id="instruction-title" class="instruction-text">{{ instructionTitle }}</div>
-    <div id="instruction-desc" class="instruction-subtext">{{ instructionDesc }}</div>
-    <div class="action-btn-container">
-      <button id="device-tilt-btn" class="btn-secondary interactive" style="background: var(--primary); border: none; margin-top: 8px;" (click)="anchorModel()">Ya lo moví</button>
-    </div>
+  <div class="orientation-warning glass" *ngIf="!isLandscapeMode">
+    Para escanear marcadores, gira el telefono a horizontal.
   </div>
 
-  <!-- Bottom Selection Bar -->
-  <div class="selector-container">
-    <div class="marker-list">
-      <div 
-        *ngFor="let key of getSelectorKeys(); let i = index"
-        class="marker-card interactive" 
-        [class.active]="i === 1"
-        (click)="selectModel(key)">
-        
-        <!-- Double-bordered square marker preview -->
-        <div class="marker-square">
-          <div class="marker-inner-square">
-            <!-- SVG Silhouette of Valdivia Figurine -->
-            <svg *ngIf="key === 'robot'" viewBox="0 0 100 100" class="marker-silhouette">
-              <path d="M 50 15 C 38 15 30 22 30 40 C 30 48 33 53 33 60 C 33 65 37 68 44 68 C 45 68 45 65 45 63 C 45 61 47 58 50 58 C 53 58 55 61 55 63 C 55 65 55 68 56 68 C 63 68 67 65 67 60 C 67 53 70 48 70 40 C 70 22 62 15 50 15 Z" fill="#ffffff"/>
-              <path d="M 50 15 L 50 30 M 38 30 C 42 32 46 33 50 33 C 54 33 58 32 62 30" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round"/>
-              <path d="M 43 42 L 45 42 M 55 42 L 57 42 M 46 48 L 54 48" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round"/>
-              <path d="M 43 68 L 43 85 C 43 88 57 88 57 85 L 57 68 Z" fill="#ffffff"/>
-            </svg>
-
-            <!-- SVG Silhouette of Duck -->
-            <svg *ngIf="key === 'spaceship'" viewBox="0 0 100 100" class="marker-silhouette">
-              <path d="M 30 50 C 30 40 40 32 50 32 C 60 32 68 40 68 50 C 68 55 65 60 58 63 C 65 65 72 65 78 60 C 82 56 86 52 86 45 C 83 45 80 47 75 47 C 70 47 68 44 65 44 C 62 44 60 40 50 40 C 45 40 38 45 38 50 C 38 55 42 60 50 60 C 50 62 45 65 30 65 Z" fill="#ffffff"/>
-            </svg>
-          </div>
-        </div>
-      </div>
+  <details class="marker-dropdown glass interactive" *ngIf="isLandscapeMode">
+    <summary>Marcadores (toca para desplegar)</summary>
+    <div class="marker-dropdown-content">
+      <button
+        class="marker-pill interactive"
+        [class.active]="activeModelId === 'robot'"
+        (click)="selectModel('robot')"
+        type="button">
+        Hiro - Choza
+      </button>
+      <button
+        class="marker-pill interactive"
+        [class.active]="activeModelId === 'spaceship'"
+        (click)="selectModel('spaceship')"
+        type="button">
+        Kanji - Pato
+      </button>
     </div>
-    <div class="selector-title">Seleccione un marcador</div>
-  </div>
+  </details>
 </div>
 
