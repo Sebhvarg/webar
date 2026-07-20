@@ -41,6 +41,7 @@ export class ArViewComponent implements OnInit, OnDestroy {
   instructionTitle: string = 'MUEVA EL CELULAR HACIA ARRIBA';
   instructionDesc: string = 'Tensa el dispositivo hacia arriba para fijar el modelo en tu espacio.';
   isLandscapeMode: boolean = true;
+  isMarkerMenuOpen: boolean = false;
   
   private initialPitch: number | null = null;
   private tiltThreshold = 15;
@@ -168,6 +169,7 @@ export class ArViewComponent implements OnInit, OnDestroy {
   private handleOrientationRequirement() {
     this.isLandscapeMode = window.innerWidth > window.innerHeight;
     if (!this.isLandscapeMode) {
+      this.isMarkerMenuOpen = false;
       this.statusDotActive = false;
       this.statusText = 'Escaneo pausado';
       this.hideInstruction();
@@ -190,6 +192,10 @@ export class ArViewComponent implements OnInit, OnDestroy {
 
   goToMainMenu() {
     window.dispatchEvent(new CustomEvent('back-to-home-request'));
+  }
+
+  toggleMarkerMenu() {
+    this.isMarkerMenuOpen = !this.isMarkerMenuOpen;
   }
 
   setupScene() {
@@ -348,20 +354,34 @@ export class ArViewComponent implements OnInit, OnDestroy {
   }
 
   resetExperience() {
+    window.dispatchEvent(new CustomEvent('ar-reset-request'));
+
     this.stateService.setMarkerVisible(false);
     this.stateService.setModelLoaded(false);
     this.stateService.setModelAnchored(false);
     this.initialPitch = null;
     this.hideInstruction();
+    this.statusText = 'Reiniciando escaneo...';
 
     const anchoredModel = document.getElementById('anchored-model');
     if (anchoredModel) {
       anchoredModel.parentNode?.removeChild(anchoredModel);
     }
-    this.setupScene();
+
+    const markerHiro = document.getElementById('marker-hiro');
+    const markerKanji = document.getElementById('marker-kanji');
+    markerHiro?.setAttribute('visible', 'false');
+    markerKanji?.setAttribute('visible', 'false');
+
+    const modelConfig = this.stateService.models[this.activeModelId];
+    setTimeout(() => {
+      this.setupScene();
+      this.statusText = `Escaneando marcador [${modelConfig.markerPreset.toUpperCase()}]`;
+    }, 220);
   }
 
   selectModel(modelId: string) {
+    this.isMarkerMenuOpen = false;
     this.stateService.setActiveModelId(modelId);
     this.resetExperience();
   }

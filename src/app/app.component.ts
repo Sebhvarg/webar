@@ -6,6 +6,7 @@ import { CabinViewComponent } from './features/cabin-view/cabin-view.component';
 import { HomeComponent } from './pages/home/home.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { StateService } from './core/services/state.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -19,9 +20,17 @@ export class AppComponent implements OnInit, OnDestroy {
   showLoadingScreen = true;
   showFixedChoza = false;
   isLandscapeMode = true;
+  activeModelId = 'robot';
+  private subscriptions = new Subscription();
 
   private onMarkerFound = (event: Event) => {
     if (!this.isLandscapeMode) {
+      this.showFixedChoza = false;
+      return;
+    }
+
+    // Choza overlay should only react when Hiro is the selected marker.
+    if (this.activeModelId !== 'robot') {
       this.showFixedChoza = false;
       return;
     }
@@ -47,6 +56,9 @@ export class AppComponent implements OnInit, OnDestroy {
   };
 
   private onEnterChozaRequest = () => {
+    if (this.activeModelId !== 'robot') {
+      return;
+    }
     this.startChozaZoomAndFade();
   };
 
@@ -56,6 +68,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
   private onBackToScanRequest = () => {
     this.returnToScanner();
+  };
+
+  private onArResetRequest = () => {
+    this.showFixedChoza = false;
   };
 
   private onOrientationChange = () => {
@@ -77,6 +93,24 @@ export class AppComponent implements OnInit, OnDestroy {
     window.addEventListener('enter-choza-request', this.onEnterChozaRequest as EventListener);
     window.addEventListener('back-to-home-request', this.onBackToHomeRequest as EventListener);
     window.addEventListener('back-to-scan-request', this.onBackToScanRequest as EventListener);
+    window.addEventListener('ar-reset-request', this.onArResetRequest as EventListener);
+
+    this.subscriptions.add(
+      this.stateService.activeModelId$.subscribe(modelId => {
+        this.activeModelId = modelId;
+        if (modelId !== 'robot') {
+          this.showFixedChoza = false;
+        }
+      })
+    );
+
+    this.subscriptions.add(
+      this.stateService.arStarted$.subscribe(started => {
+        if (started) {
+          this.showFixedChoza = false;
+        }
+      })
+    );
 
     // Desvanecer la pantalla de carga después de 2 segundos para dar tiempo a que los recursos de A-Frame se inicialicen
     setTimeout(() => {
@@ -92,6 +126,8 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.subscriptions.unsubscribe();
+
     window.removeEventListener('resize', this.onOrientationChange as EventListener);
     window.removeEventListener('orientationchange', this.onOrientationChange as EventListener);
 
@@ -100,6 +136,7 @@ export class AppComponent implements OnInit, OnDestroy {
     window.removeEventListener('enter-choza-request', this.onEnterChozaRequest as EventListener);
     window.removeEventListener('back-to-home-request', this.onBackToHomeRequest as EventListener);
     window.removeEventListener('back-to-scan-request', this.onBackToScanRequest as EventListener);
+    window.removeEventListener('ar-reset-request', this.onArResetRequest as EventListener);
   }
 
   enterChozaFromOverlay() {
@@ -132,11 +169,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
     const videoEl = document.querySelector('video') as HTMLVideoElement | null;
     if (videoEl) {
-      const stream = videoEl.srcObject as MediaStream | null;
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop());
-      }
-      videoEl.parentNode?.removeChild(videoEl);
+      videoEl.style.display = 'none';
     }
 
     this.showFixedChoza = false;
@@ -156,10 +189,10 @@ export class AppComponent implements OnInit, OnDestroy {
     this.stateService.setModelLoaded(false);
     this.stateService.setModelAnchored(false);
 
-    // Reinitialize scanner pipeline after interior teardown.
+    // Always remount scanner to reset AR.js tracking/camera state reliably.
     this.stateService.setArStarted(false);
     setTimeout(() => {
       this.stateService.setArStarted(true);
-    }, 80);
+    }, 180);
   }
 }

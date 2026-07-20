@@ -14,9 +14,12 @@
     Para escanear marcadores, gira el telefono a horizontal.
   </div>
 
-  <details class="marker-dropdown glass interactive" *ngIf="isLandscapeMode">
-    <summary>Marcadores (toca para desplegar)</summary>
-    <div class="marker-dropdown-content">
+  <div class="marker-dropdown" *ngIf="isLandscapeMode">
+    <button class="marker-dropdown-toggle glass interactive" type="button" (click)="toggleMarkerMenu()">
+      <span>Marcadores (toca para desplegar)</span>
+      <span class="marker-dropdown-arrow" [class.open]="isMarkerMenuOpen">▾</span>
+    </button>
+    <div class="marker-dropdown-content glass" *ngIf="isMarkerMenuOpen">
       <button
         class="marker-pill interactive"
         [class.active]="activeModelId === 'robot'"
@@ -32,6 +35,6 @@
         Kanji - Pato
       </button>
     </div>
-  </details>
+  </div>
 </div>
 

@@ -159,27 +159,26 @@ p.subtitle {
   align-self: flex-start;
   width: min(320px, calc(100% - 48px));
   pointer-events: auto;
-  padding: 8px 10px;
-  border-radius: 14px;
 }
 
-.marker-dropdown summary {
-  cursor: pointer;
-  list-style: none;
-  font-weight: 700;
+.marker-dropdown-toggle {
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
   color: #f8fafc;
+  background: rgba(15, 23, 42, 0.65);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  font-weight: 700;
 }
 
-.marker-dropdown summary::after {
-  content: '▾';
-  opacity: 0.8;
-  font-size: 0.95rem;
+.marker-dropdown-arrow {
+  transition: transform 0.2s ease;
 }
 
-.marker-dropdown[open] summary::after {
+.marker-dropdown-arrow.open {
   transform: rotate(180deg);
 }
 
@@ -188,7 +187,9 @@ p.subtitle {
 }
 
 .marker-dropdown-content {
-  margin-top: 10px;
+  margin-top: 8px;
+  padding: 10px;
+  border-radius: 14px;
   display: flex;
   gap: 8px;
   flex-wrap: wrap;

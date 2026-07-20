@@ -131,4 +131,8 @@ export class StateService {
   getCurrentLayer(): Layer {
     return this.layers[this.activeLayerIndexSource.value];
   }
+
+  getActiveModelId(): string {
+    return this.activeModelIdSource.value;
+  }
 }
