@@ -36,46 +36,46 @@ export class StateService {
   public experiences: ARExperience[] = [
     {
       id: 'choza_realalto',
-      name: 'Choza Real Alto',
+      name: 'experience.choza_realalto.name',
       markerPreset: 'hiro',
       markerLabel: 'Hiro',
       scanImage: 'assets/img/choza.webp',
       layer: {
         id: 'layer_choza',
-        name: 'Entorno Choza',
+        name: 'experience.choza_realalto.layerName',
         mainImage: 'assets/img/choza.webp',
         backgroundImage: 'assets/img/interiorchoza.webp',
         foregroundImage: 'assets/entorno/mesa.png',
         elements: [
           {
             id: 'valdivia',
-            name: 'Estatuilla Valdivia',
+            name: 'element.valdivia.name',
             glb: 'assets/models/valdivia.glb',
             png: 'assets/models/valdivia.png',
-            desc: 'Figura cerámica de la cultura Valdivia, representando la fertilidad y el arte precolombino.'
+            desc: 'element.valdivia.desc'
           }
         ]
       }
     },
     {
       id: 'choza2_realalto',
-      name: 'Choza Valdivia',
+      name: 'experience.choza2_realalto.name',
       markerPreset: 'kanji',
       markerLabel: 'Kanji',
       scanImage: 'assets/img/choza2.webp',
       layer: {
         id: 'layer_choza2',
-        name: 'Entorno Choza Valdivia',
+        name: 'experience.choza2_realalto.layerName',
         mainImage: 'assets/img/choza2.webp',
         backgroundImage: 'assets/img/interiorchoza2.webp',
         foregroundImage: 'assets/entorno/mesa.png',
         elements: [
           {
             id: 'choza2_realalto',
-            name: 'Choza Valdivia',
+            name: 'element.choza2_realalto.name',
             glb: 'assets/models/duck.glb',
             png: 'assets/models/duck.png',
-            desc: 'Representación 3D de la Choza Valdivia.'
+            desc: 'element.choza2_realalto.desc'
           }
         ]
       }

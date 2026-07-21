@@ -1,0 +1,9 @@
+{
+  "defaultLanguage": "es",
+  "fallbackLanguage": "es",
+  "supportedLanguages": ["es", "en"],
+  "files": {
+    "es": "assets/i18n/es.json",
+    "en": "assets/i18n/en.json"
+  }
+}

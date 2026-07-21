@@ -7,6 +7,8 @@ import { HomeComponent } from './pages/home/home.component';
 import { InformationComponent } from './pages/information/information.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { StateService } from './core/services/state.service';
+import { I18nService } from './core/services/i18n.service';
+import { TPipe } from './core/pipes/t.pipe';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -14,7 +16,7 @@ import { Subscription } from 'rxjs';
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule, ArViewComponent, CabinViewComponent, HomeComponent, InformationComponent, SidebarComponent],
+  imports: [CommonModule, IonicModule, ArViewComponent, CabinViewComponent, HomeComponent, InformationComponent, SidebarComponent, TPipe],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppComponent implements OnInit, OnDestroy {
@@ -82,9 +84,15 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   };
 
-  constructor(public stateService: StateService) {}
+  constructor(public stateService: StateService, private i18n: I18nService) {}
 
-  ngOnInit() {
+  async ngOnInit() {
+    try {
+      await this.i18n.init();
+    } catch {
+      // Continue with fallback keys if i18n files fail to load.
+    }
+
     const activeExperience = this.stateService.getActiveExperience();
     this.activeExperienceId = activeExperience.id;
     this.activeMarkerId = `marker-${activeExperience.markerPreset}`;

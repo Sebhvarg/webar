@@ -1,0 +1,77 @@
+{
+  "app": {
+    "enterCabin": "Enter the cabin",
+    "arSceneAlt": "AR scene"
+  },
+  "common": {
+    "menu": "Menu",
+    "logo": "Logo",
+    "complex": "CULTURAL COMPLEX",
+    "close": "Close",
+    "detail": "Detail"
+  },
+  "home": {
+    "location": "Santa Elena · Ecuador",
+    "pitch": "Interactive Augmented Reality Guide",
+    "description": "Discover 3D archaeological replicas and interactive history directly in the museum's open area.",
+    "startAr": "Start WebAR tour",
+    "cameraWarning": "Camera permission and good lighting are required"
+  },
+  "sidebar": {
+    "home": "HOME",
+    "information": "INFORMATION",
+    "ar": "WEB AR EXP.",
+    "exit": "Exit",
+    "language": "Language"
+  },
+  "information": {
+    "title": "Information",
+    "hoursTitle": "Opening Hours",
+    "weekday": "Monday - Friday: 9:00am - 5:00pm",
+    "saturday": "Saturday: 10:00am - 4:00pm",
+    "sunday": "Sunday: Closed",
+    "locationTitle": "Location",
+    "locationLine1": "Real Alto Cultural Complex",
+    "locationLine2": "Santa Elena Peninsula",
+    "locationLine3": "Ecuador",
+    "moreTitle": "More Information"
+  },
+  "ar": {
+    "backMenu": "Back to menu",
+    "reset": "Reset",
+    "orientationWarning": "To scan markers, rotate your phone to landscape.",
+    "markerMenu": "Markers (tap to open)",
+    "status": {
+      "loading": "Loading camera...",
+      "scanning": "Scanning marker [{marker}]",
+      "detected": "Marker detected",
+      "searching": "Searching for marker...",
+      "paused": "Scanning paused",
+      "resetting": "Resetting scan..."
+    }
+  },
+  "cabin": {
+    "backToScan": "Back to scan",
+    "tableAlt": "Table"
+  },
+  "experience": {
+    "choza_realalto": {
+      "name": "Real Alto Hut",
+      "layerName": "Hut Environment"
+    },
+    "choza2_realalto": {
+      "name": "Valdivia Hut",
+      "layerName": "Valdivia Hut Environment"
+    }
+  },
+  "element": {
+    "valdivia": {
+      "name": "Valdivia Figurine",
+      "desc": "Ceramic figurine from the Valdivia culture, representing fertility and pre-Columbian art."
+    },
+    "choza2_realalto": {
+      "name": "Valdivia Hut",
+      "desc": "3D representation of the Valdivia Hut."
+    }
+  }
+}

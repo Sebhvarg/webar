@@ -1,0 +1,77 @@
+{
+  "app": {
+    "enterCabin": "Entrar a la choza",
+    "arSceneAlt": "Escena AR"
+  },
+  "common": {
+    "menu": "Menú",
+    "logo": "Logo",
+    "complex": "COMPLEJO CULTURAL",
+    "close": "Cerrar",
+    "detail": "Detalle"
+  },
+  "home": {
+    "location": "Santa Elena · Ecuador",
+    "pitch": "Guía Interactiva en Realidad Aumentada",
+    "description": "Descubre réplicas arqueológicas tridimensionales e historia interactiva directamente en el área abierta del museo.",
+    "startAr": "Iniciar recorrido WebAR",
+    "cameraWarning": "Requiere permisos de cámara y un entorno bien iluminado"
+  },
+  "sidebar": {
+    "home": "INICIO",
+    "information": "INFORMACIÓN",
+    "ar": "WEB AR EXP.",
+    "exit": "Salir",
+    "language": "Idioma"
+  },
+  "information": {
+    "title": "Información",
+    "hoursTitle": "Horarios de Atención",
+    "weekday": "Lunes - Viernes: 9:00am - 5:00pm",
+    "saturday": "Sábados: 10:00am - 4:00pm",
+    "sunday": "Domingos: Cerrado",
+    "locationTitle": "Ubicación",
+    "locationLine1": "Complejo Cultural Real Alto",
+    "locationLine2": "Península de Santa Elena",
+    "locationLine3": "Ecuador",
+    "moreTitle": "Más Información"
+  },
+  "ar": {
+    "backMenu": "Volver al menú",
+    "reset": "Reiniciar",
+    "orientationWarning": "Para escanear marcadores, gira el teléfono a horizontal.",
+    "markerMenu": "Marcadores (toca para desplegar)",
+    "status": {
+      "loading": "Cargando cámara...",
+      "scanning": "Escaneando marcador [{marker}]",
+      "detected": "Marcador detectado",
+      "searching": "Buscando marcador...",
+      "paused": "Escaneo pausado",
+      "resetting": "Reiniciando escaneo..."
+    }
+  },
+  "cabin": {
+    "backToScan": "Volver a escanear",
+    "tableAlt": "Mesa"
+  },
+  "experience": {
+    "choza_realalto": {
+      "name": "Choza Real Alto",
+      "layerName": "Entorno Choza"
+    },
+    "choza2_realalto": {
+      "name": "Choza Valdivia",
+      "layerName": "Entorno Choza Valdivia"
+    }
+  },
+  "element": {
+    "valdivia": {
+      "name": "Estatuilla Valdivia",
+      "desc": "Figura cerámica de la cultura Valdivia, representando la fertilidad y el arte precolombino."
+    },
+    "choza2_realalto": {
+      "name": "Choza Valdivia",
+      "desc": "Representación 3D de la Choza Valdivia."
+    }
+  }
+}

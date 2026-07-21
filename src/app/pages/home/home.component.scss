@@ -41,6 +41,12 @@
   box-sizing: border-box;
 }
 
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .menu-btn {
   background: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -79,6 +85,32 @@
     letter-spacing: 1.5px;
     color: #ff9f1c;
   }
+}
+
+.language-switcher {
+  display: inline-flex;
+  border: 1px solid rgba(255, 159, 28, 0.45);
+  border-radius: 999px;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+}
+
+.lang-btn {
+  border: none;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffcf8a;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  min-width: 38px;
+  height: 32px;
+  padding: 0 10px;
+  cursor: pointer;
+}
+
+.lang-btn.active {
+  background: #ff9f1c;
+  color: #ffffff;
 }
 
 /* Content layout */
@@ -283,6 +315,10 @@
 
   .home-header {
     padding: 12px 20px;
+  }
+
+  .header-right {
+    gap: 12px;
   }
 
   .home-content {

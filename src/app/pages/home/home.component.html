@@ -4,11 +4,17 @@
 
   <!-- Header section -->
   <header class="home-header">
-    <button class="menu-btn" aria-label="Menú" (click)="toggleSidebar()">
+    <button class="menu-btn" [attr.aria-label]="'common.menu' | t" (click)="toggleSidebar()">
       <span class="menu-icon">☰</span>
     </button>
-    <div class="badge-complejo">
-      <span>COMPLEJO CULTURAL</span>
+    <div class="header-right">
+      <div class="badge-complejo">
+        <span>{{ 'common.complex' | t }}</span>
+      </div>
+      <div class="language-switcher">
+        <button type="button" class="lang-btn" [class.active]="currentLanguage === 'es'" (click)="changeLanguage('es')">ES</button>
+        <button type="button" class="lang-btn" [class.active]="currentLanguage === 'en'" (click)="changeLanguage('en')">EN</button>
+      </div>
     </div>
   </header>
 
@@ -19,7 +25,7 @@
       <div class="logo-wrapper">
         <img
           src="assets/img/logovaldivia.webp"
-          alt="Logo"
+          [attr.alt]="'common.logo' | t"
           
         />
       </div>
@@ -31,22 +37,22 @@
     </div>
 
     <!-- Location -->
-    <p class="location-text">Santa Elena · Ecuador</p>
+    <p class="location-text">{{ 'home.location' | t }}</p>
 
     <!-- App Pitch -->
-    <h2 class="main-pitch">Guía Interactiva en Realidad Aumentada</h2>
+    <h2 class="main-pitch">{{ 'home.pitch' | t }}</h2>
     <p class="description-text">
-      Descubre réplicas arqueológicas tridimensionales e historia interactiva directamente en el área abierta del museo.
+      {{ 'home.description' | t }}
     </p>
 
     <!-- Action Button -->
     <button class="btn-start-ar" (click)="iniciarWebAR()">
-      Iniciar recorrido WebAR
+      {{ 'home.startAr' | t }}
     </button>
 
     <!-- Warning Message -->
     <p class="warning-text">
-      <span class="warning-icon">▲</span> Requiere permisos de cámara y un entorno bien iluminado
+      <span class="warning-icon">▲</span> {{ 'home.cameraWarning' | t }}
     </p>
   </main>
 </div>

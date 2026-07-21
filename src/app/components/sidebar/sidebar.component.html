@@ -19,27 +19,27 @@
         class="nav-item" 
         [class.active]="activeTab === 'inicio'"
         (click)="selectTab('inicio')">
-        INICIO
+        {{ 'sidebar.home' | t }}
       </button>
 
       <button 
         class="nav-item" 
         [class.active]="activeTab === 'informacion'"
         (click)="selectTab('informacion')">
-        INFORMACIÓN
+        {{ 'sidebar.information' | t }}
       </button>
 
       <button 
         class="nav-item" 
         [class.active]="activeTab === 'ar'"
         (click)="selectTab('ar')">
-        WEB AR EXP.
+        {{ 'sidebar.ar' | t }}
       </button>
     </nav>
 
     <!-- Bottom Sign Out / Exit Action -->
     <div class="sidebar-footer">
-      <button class="btn-logout" aria-label="Salir" (click)="exitApp()">
+      <button class="btn-logout" [attr.aria-label]="'sidebar.exit' | t" (click)="exitApp()">
         <svg viewBox="0 0 24 24" class="logout-icon" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
           <polyline points="16 17 21 12 16 7" />

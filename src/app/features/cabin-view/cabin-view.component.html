@@ -1,13 +1,13 @@
 <!-- Full Screen Interior Choza Overlay wrapped in Ionic App component -->
 <ion-app id="interior-overlay" class="interior-overlay" *ngIf="stateService.interiorActive$ | async" style="display: block;">
-  <button class="back-to-scan-btn interactive" (click)="backToScan()">Volver a escanear</button>
+  <button class="back-to-scan-btn interactive" (click)="backToScan()">{{ 'cabin.backToScan' | t }}</button>
 
   <!-- Fullscreen background container -->
   <div id="interior-bg" class="interior-bg" [style.backgroundImage]="'url(' + currentLayer.backgroundImage + ')'"></div>
   
   <!-- Table overlayed at the bottom -->
   <div class="table-container">
-    <img [src]="currentLayer.foregroundImage" id="mesa-img" class="mesa-img" alt="Mesa">
+    <img [src]="currentLayer.foregroundImage" id="mesa-img" class="mesa-img" [alt]="'cabin.tableAlt' | t">
     
     <!-- Horizontal list of elements on the table -->
     <div id="elements-horizontal-container" class="elements-horizontal-container interactive">
@@ -16,7 +16,7 @@
         [src]="element.png" 
         class="valdivia-btn interactive" 
         [class.active]="activeElementId === element.id"
-        [alt]="element.name"
+        [alt]="element.name | t"
         (click)="openElement(element)">
     </div>
   </div>
@@ -26,9 +26,9 @@
     <ng-template>
       <ion-header>
         <ion-toolbar color="dark">
-          <ion-title>Detalle</ion-title>
+          <ion-title>{{ 'common.detail' | t }}</ion-title>
           <ion-buttons slot="end">
-            <ion-button (click)="closeModal()">Cerrar</ion-button>
+            <ion-button (click)="closeModal()">{{ 'common.close' | t }}</ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
@@ -43,12 +43,12 @@
               auto-rotate
               ar
               shadow-intensity="1"
-              [alt]="selectedElement.name">
+              [alt]="selectedElement.name | t">
             </model-viewer>
           </div>
           <div class="modal-info-card">
-            <h2 class="modal-title">{{ selectedElement?.name }}</h2>
-            <p class="modal-desc">{{ selectedElement?.desc }}</p>
+            <h2 class="modal-title">{{ selectedElement?.name | t }}</h2>
+            <p class="modal-desc">{{ selectedElement?.desc | t }}</p>
           </div>
         </div>
       </ion-content>

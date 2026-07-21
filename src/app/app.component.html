@@ -2,7 +2,7 @@
   <!-- Pantalla de Carga (Loading Screen) -->
   <div id="loading-screen" *ngIf="showLoadingScreen">
     <div class="loading-logo-container">
-      <img src="assets/img/logo.webp" alt="Real Alto Logo" class="loading-logo" onerror="this.onerror=null; this.src='assets/img/logo.webpn';">
+      <img src="assets/img/logo.webp" [alt]="'common.logo' | t" class="loading-logo" onerror="this.onerror=null; this.src='assets/img/logo.webpn';">
       <div class="spinner"></div>
     </div>
   </div>
@@ -40,10 +40,10 @@
 
   <!-- Choza fija en pantalla completa al detectar Hiro -->
   <div class="fixed-choza-overlay" *ngIf="(stateService.arStarted$ | async) && isFixedScanOverlayVisible">
-    <img [src]="activeScanImage" alt="Escena AR" class="fixed-choza-image">
+    <img [src]="activeScanImage" [alt]="'app.arSceneAlt' | t" class="fixed-choza-image">
   </div>
   <div class="fixed-choza-controls" *ngIf="(stateService.arStarted$ | async) && isFixedScanOverlayVisible">
-    <button class="enter-choza-button" (click)="enterChozaFromOverlay()">Entrar a la choza</button>
+    <button class="enter-choza-button" (click)="enterChozaFromOverlay()">{{ 'app.enterCabin' | t }}</button>
   </div>
 
   <!-- Gyroscopic Cabin Experience Overlay -->

@@ -2,29 +2,29 @@
   <div class="background-overlay"></div>
 
   <header class="info-header">
-    <button class="menu-btn" aria-label="Menú" (click)="toggleSidebar()">
+    <button class="menu-btn" [attr.aria-label]="'common.menu' | t" (click)="toggleSidebar()">
       <span class="menu-icon">☰</span>
     </button>
     <div class="badge-complejo">
-      <span>COMPLEJO CULTURAL</span>
+      <span>{{ 'common.complex' | t }}</span>
     </div>
   </header>
 
   <main class="info-content">
     <section class="info-card">
-      <h1>Información</h1>
+      <h1>{{ 'information.title' | t }}</h1>
 
-      <h2>Horarios de Atención</h2>
-      <p>Lunes - Viernes: 9:00am - 5:00pm</p>
-      <p>Sábados: 10:00am - 4:00pm</p>
-      <p>Domingos: Cerrado</p>
+      <h2>{{ 'information.hoursTitle' | t }}</h2>
+      <p>{{ 'information.weekday' | t }}</p>
+      <p>{{ 'information.saturday' | t }}</p>
+      <p>{{ 'information.sunday' | t }}</p>
 
-      <h2>Ubicación</h2>
-      <p>Complejo Cultural Real Alto</p>
-      <p>Península de Santa Elena</p>
-      <p>Ecuador</p>
+      <h2>{{ 'information.locationTitle' | t }}</h2>
+      <p>{{ 'information.locationLine1' | t }}</p>
+      <p>{{ 'information.locationLine2' | t }}</p>
+      <p>{{ 'information.locationLine3' | t }}</p>
 
-      <h2>Más Información</h2>
+      <h2>{{ 'information.moreTitle' | t }}</h2>
       <a
         href="https://museorealalto.github.io/Museo360oficial/"
         target="_blank"

@@ -2,6 +2,8 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, OnDestroy } from '@angular/c
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { StateService } from '../../core/services/state.service';
+import { I18nService } from '../../core/services/i18n.service';
+import { TPipe } from '../../core/pipes/t.pipe';
 import { Subscription } from 'rxjs';
 
 declare const AFRAME: any;
@@ -26,16 +28,18 @@ if (typeof window !== 'undefined' && (window as any).AFRAME && !(window as any).
   templateUrl: './ar-view.component.html',
   styleUrls: ['./ar-view.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule],
+  imports: [CommonModule, IonicModule, TPipe],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ArViewComponent implements OnInit, OnDestroy {
   activeExperienceId: string = 'choza_realalto';
   experiences = this.stateService.experiences;
-  statusText: string = 'Cargando cámara...';
+  statusText: string = '';
   statusDotActive: boolean = false;
   isLandscapeMode: boolean = true;
   isMarkerMenuOpen: boolean = false;
+  private statusMode: 'loading' | 'scanning' | 'detected' | 'searching' | 'paused' | 'resetting' = 'loading';
+  private statusMarker = '';
 
   private subscriptions: Subscription = new Subscription();
 
@@ -43,9 +47,17 @@ export class ArViewComponent implements OnInit, OnDestroy {
   private boundMarkerLost = this.onMarkerLost.bind(this);
   private boundOrientationChange = this.handleOrientationRequirement.bind(this);
 
-  constructor(public stateService: StateService) {}
+  constructor(public stateService: StateService, private i18n: I18nService) {
+    this.refreshStatusText();
+  }
 
   ngOnInit() {
+    this.subscriptions.add(
+      this.i18n.language$.subscribe(() => {
+        this.refreshStatusText();
+      })
+    );
+
     this.handleOrientationRequirement();
     window.addEventListener('resize', this.boundOrientationChange);
     window.addEventListener('orientationchange', this.boundOrientationChange);
@@ -65,7 +77,7 @@ export class ArViewComponent implements OnInit, OnDestroy {
         if (started) {
           this.statusDotActive = true;
           const activeExperience = this.stateService.getActiveExperience();
-          this.statusText = `Escaneando marcador [${activeExperience.markerPreset.toUpperCase()}]`;
+          this.setScanningStatus(activeExperience.markerPreset);
           this.setupScene();
           this.requestSensorPermissions();
         }
@@ -85,7 +97,7 @@ export class ArViewComponent implements OnInit, OnDestroy {
     this.stateService.setArStarted(true);
     this.statusDotActive = true;
     const activeExperience = this.stateService.getActiveExperience();
-    this.statusText = `Escaneando marcador [${activeExperience.markerPreset.toUpperCase()}]`;
+    this.setScanningStatus(activeExperience.markerPreset);
     
     this.setupScene();
     this.requestSensorPermissions();
@@ -118,7 +130,8 @@ export class ArViewComponent implements OnInit, OnDestroy {
     
     if (markerId === expectedMarkerId) {
       this.stateService.setMarkerVisible(true);
-      this.statusText = 'Marcador detectado';
+      this.statusMode = 'detected';
+      this.refreshStatusText();
       setTimeout(() => {
         this.stateService.setModelLoaded(true);
       }, 1000);
@@ -132,7 +145,8 @@ export class ArViewComponent implements OnInit, OnDestroy {
 
     if (markerId === expectedMarkerId) {
       this.stateService.setMarkerVisible(false);
-      this.statusText = 'Buscando marcador...';
+      this.statusMode = 'searching';
+      this.refreshStatusText();
     }
   }
 
@@ -141,7 +155,8 @@ export class ArViewComponent implements OnInit, OnDestroy {
     if (!this.isLandscapeMode) {
       this.isMarkerMenuOpen = false;
       this.statusDotActive = false;
-      this.statusText = 'Escaneo pausado';
+      this.statusMode = 'paused';
+      this.refreshStatusText();
       this.stateService.setMarkerVisible(false);
       this.stateService.setModelLoaded(false);
       this.setupScene();
@@ -150,7 +165,7 @@ export class ArViewComponent implements OnInit, OnDestroy {
 
     this.statusDotActive = true;
     const activeExperience = this.stateService.getActiveExperience();
-    this.statusText = `Escaneando marcador [${activeExperience.markerPreset.toUpperCase()}]`;
+    this.setScanningStatus(activeExperience.markerPreset);
     this.setupScene();
   }
 
@@ -178,7 +193,8 @@ export class ArViewComponent implements OnInit, OnDestroy {
     this.stateService.setMarkerVisible(false);
     this.stateService.setModelLoaded(false);
     this.stateService.setModelAnchored(false);
-    this.statusText = 'Reiniciando escaneo...';
+    this.statusMode = 'resetting';
+    this.refreshStatusText();
 
     const anchoredModel = document.getElementById('anchored-model');
     if (anchoredModel) {
@@ -193,7 +209,7 @@ export class ArViewComponent implements OnInit, OnDestroy {
     const activeExperience = this.stateService.getActiveExperience();
     setTimeout(() => {
       this.setupScene();
-      this.statusText = `Escaneando marcador [${activeExperience.markerPreset.toUpperCase()}]`;
+      this.setScanningStatus(activeExperience.markerPreset);
     }, 220);
   }
 
@@ -201,5 +217,26 @@ export class ArViewComponent implements OnInit, OnDestroy {
     this.isMarkerMenuOpen = false;
     this.stateService.setActiveExperienceId(experienceId);
     this.resetExperience();
+  }
+
+  getMarkerPillLabel(markerLabel: string | undefined, markerPreset: string, experienceNameKey: string): string {
+    const marker = markerLabel || markerPreset;
+    return `${marker} - ${this.i18n.t(experienceNameKey)}`;
+  }
+
+  private setScanningStatus(markerPreset: string) {
+    this.statusMode = 'scanning';
+    this.statusMarker = markerPreset.toUpperCase();
+    this.refreshStatusText();
+  }
+
+  private refreshStatusText() {
+    if (this.statusMode === 'scanning') {
+      const template = this.i18n.t('ar.status.scanning');
+      this.statusText = template.replace('{marker}', this.statusMarker || '');
+      return;
+    }
+
+    this.statusText = this.i18n.t(`ar.status.${this.statusMode}`);
   }
 }

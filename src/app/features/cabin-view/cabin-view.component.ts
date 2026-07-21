@@ -4,13 +4,14 @@ import { IonicModule } from '@ionic/angular';
 import { StateService } from '../../core/services/state.service';
 import { Layer, LayerElement } from '../../core/models/experience.model';
 import { Subscription } from 'rxjs';
+import { TPipe } from '../../core/pipes/t.pipe';
 
 @Component({
   selector: 'app-cabin-view',
   templateUrl: './cabin-view.component.html',
   styleUrls: ['./cabin-view.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule],
+  imports: [CommonModule, IonicModule, TPipe],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class CabinViewComponent implements OnInit, OnDestroy {
