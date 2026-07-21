@@ -189,19 +189,29 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   private transitionToCabin() {
-    const sceneEl = document.querySelector('a-scene') as HTMLElement | null;
-    if (sceneEl) {
-      sceneEl.style.display = 'none';
-    }
-
-    const videoEl = document.querySelector('video') as HTMLVideoElement | null;
-    if (videoEl) {
-      videoEl.style.display = 'none';
-    }
+    this.deactivateArCameraAndRenderer();
 
     this.showFixedChoza = false;
     this.detectedExperienceId = '';
     this.stateService.setInteriorActive(true);
+  }
+
+  private deactivateArCameraAndRenderer() {
+    const renderNodes = document.querySelectorAll<HTMLElement>('a-scene, video, .a-canvas, canvas.a-canvas');
+    renderNodes.forEach(node => {
+      node.style.display = 'none';
+      node.style.visibility = 'hidden';
+      node.style.opacity = '0';
+    });
+
+    const videos = document.querySelectorAll<HTMLVideoElement>('video');
+    videos.forEach(video => {
+      const stream = video.srcObject as MediaStream | null;
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        video.srcObject = null;
+      }
+    });
   }
 
   private returnToHome() {

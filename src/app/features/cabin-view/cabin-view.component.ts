@@ -22,11 +22,8 @@ export class CabinViewComponent implements OnInit, OnDestroy {
   
   private isDragging = false;
   private startTouchX = 0;
-  private startTouchY = 0;
   private dragStartOffsetX = 0;
-  private dragStartOffsetY = 0;
   private panoramaOffsetX = 0;
-  private panoramaOffsetY = 0;
   private lastYawDeg: number | null = null;
   private readonly pxPerYawDegree = 6;
   private touchControlsInitialized = false;
@@ -57,7 +54,6 @@ export class CabinViewComponent implements OnInit, OnDestroy {
         if (active) {
           this.lastYawDeg = null;
           this.panoramaOffsetX = 0;
-          this.panoramaOffsetY = 0;
           this.applyPanoramaPosition();
           this.requestOrientationPermission();
           this.setupTouchControls();
@@ -108,9 +104,6 @@ export class CabinViewComponent implements OnInit, OnDestroy {
 
     this.panoramaOffsetX += deltaYaw * this.pxPerYawDegree;
 
-    const beta = event.beta ?? 0;
-    this.panoramaOffsetY = Math.max(-35, Math.min(35, (beta - 45) * -0.45));
-
     this.applyPanoramaPosition();
   }
 
@@ -131,7 +124,7 @@ export class CabinViewComponent implements OnInit, OnDestroy {
   private applyPanoramaPosition() {
     const interiorBg = document.getElementById('interior-bg');
     if (interiorBg) {
-      interiorBg.style.backgroundPosition = `${this.panoramaOffsetX}px calc(50% + ${this.panoramaOffsetY}px)`;
+      interiorBg.style.backgroundPosition = `${this.panoramaOffsetX}px 50%`;
     }
   }
 
@@ -147,9 +140,7 @@ export class CabinViewComponent implements OnInit, OnDestroy {
       if (this.showModal) return;
       this.isDragging = true;
       this.startTouchX = e.touches[0].clientX;
-      this.startTouchY = e.touches[0].clientY;
       this.dragStartOffsetX = this.panoramaOffsetX;
-      this.dragStartOffsetY = this.panoramaOffsetY;
     }, { passive: true });
 
     overlay.addEventListener('touchmove', (e: TouchEvent) => {
@@ -157,15 +148,12 @@ export class CabinViewComponent implements OnInit, OnDestroy {
       if (!this.isDragging) return;
 
       const currentX = e.touches[0].clientX;
-      const currentY = e.touches[0].clientY;
       const deltaX = currentX - this.startTouchX;
-      const deltaY = currentY - this.startTouchY;
 
       const dragX = this.dragStartOffsetX + deltaX * 1.2;
-      const dragY = Math.max(-35, Math.min(35, this.dragStartOffsetY + deltaY * 0.25));
       const interiorBg = document.getElementById('interior-bg');
       if (interiorBg) {
-        interiorBg.style.backgroundPosition = `${dragX}px calc(50% + ${dragY}px)`;
+        interiorBg.style.backgroundPosition = `${dragX}px 50%`;
       }
     }, { passive: true });
 
@@ -178,9 +166,7 @@ export class CabinViewComponent implements OnInit, OnDestroy {
       if (!touch) return;
 
       const deltaX = touch.clientX - this.startTouchX;
-      const deltaY = touch.clientY - this.startTouchY;
       this.panoramaOffsetX = this.dragStartOffsetX + deltaX * 1.2;
-      this.panoramaOffsetY = Math.max(-35, Math.min(35, this.dragStartOffsetY + deltaY * 0.25));
       this.applyPanoramaPosition();
     }, { passive: true });
   }
