@@ -31,8 +31,9 @@
     </a-entity>
   </a-scene>
 
-  <!-- Home Page / Main Layer -->
-  <app-home-page *ngIf="!(stateService.arStarted$ | async)"></app-home-page>
+  <!-- Home/Information Main Layer -->
+  <app-home-page *ngIf="!(stateService.arStarted$ | async) && (stateService.activeTab$ | async) !== 'informacion'"></app-home-page>
+  <app-information-page *ngIf="!(stateService.arStarted$ | async) && (stateService.activeTab$ | async) === 'informacion'"></app-information-page>
 
   <!-- AR Experience Overlay Page -->
   <app-ar-view *ngIf="stateService.arStarted$ | async"></app-ar-view>

@@ -1,25 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { StateService } from '../../core/services/state.service';
 
 @Component({
-  selector: 'app-home-page',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
+  selector: 'app-information-page',
+  templateUrl: './information.component.html',
+  styleUrls: ['./information.component.scss'],
   standalone: true,
   imports: [CommonModule, IonicModule]
 })
-export class HomeComponent implements OnInit {
+export class InformationComponent {
   constructor(private stateService: StateService) {}
-
-  ngOnInit() {}
 
   toggleSidebar() {
     this.stateService.setSidebarOpen(true);
-  }
-
-  iniciarWebAR() {
-    this.stateService.setArStarted(true);
   }
 }

@@ -48,29 +48,5 @@
     <p class="warning-text">
       <span class="warning-icon">▲</span> Requiere permisos de cámara y un entorno bien iluminado
     </p>
-
-    <!-- Gallery Section -->
-    <section class="gallery-section">
-      <h3 class="gallery-title">Galería de Exhibiciones</h3>
-      <div class="gallery-grid">
-        <ng-container *ngFor="let item of galleryItems; let i = index">
-          <div 
-            class="gallery-card"
-            [class.active]="activeSlideIndex === i"
-            *ngIf="activeSlideIndex === i">
-            <img [src]="item.image" [alt]="item.title" class="gallery-img">
-          </div>
-        </ng-container>
-      </div>
-      <!-- Dots indicator -->
-      <div class="gallery-dots">
-        <span 
-          *ngFor="let item of galleryItems; let i = index"
-          class="dot" 
-          [class.active]="activeSlideIndex === i"
-          (click)="setSlide(i)">
-        </span>
-      </div>
-    </section>
   </main>
 </div>

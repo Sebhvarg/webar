@@ -4,6 +4,7 @@ import { IonicModule } from '@ionic/angular';
 import { ArViewComponent } from './features/ar-view/ar-view.component';
 import { CabinViewComponent } from './features/cabin-view/cabin-view.component';
 import { HomeComponent } from './pages/home/home.component';
+import { InformationComponent } from './pages/information/information.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { StateService } from './core/services/state.service';
 import { Subscription } from 'rxjs';
@@ -13,7 +14,7 @@ import { Subscription } from 'rxjs';
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule, ArViewComponent, CabinViewComponent, HomeComponent, SidebarComponent],
+  imports: [CommonModule, IonicModule, ArViewComponent, CabinViewComponent, HomeComponent, InformationComponent, SidebarComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppComponent implements OnInit, OnDestroy {

@@ -30,14 +30,18 @@ export class SidebarComponent implements OnInit {
 
   selectTab(tab: string) {
     this.stateService.setActiveTab(tab);
-    this.closeSidebar();
 
     if (tab === 'ar') {
       this.stateService.setArStarted(true);
+    } else if (tab === 'informacion') {
+      this.stateService.setArStarted(false);
+      this.stateService.setInteriorActive(false);
     } else if (tab === 'inicio') {
       this.stateService.setArStarted(false);
       this.stateService.setInteriorActive(false);
     }
+
+    this.closeSidebar();
   }
 
   closeSidebar() {
