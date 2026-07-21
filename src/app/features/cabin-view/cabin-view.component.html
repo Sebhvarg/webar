@@ -26,28 +26,30 @@
     <ng-template>
       <ion-header>
         <ion-toolbar color="dark">
-          <ion-title>{{ selectedElement?.name }}</ion-title>
+          <ion-title>Detalle</ion-title>
           <ion-buttons slot="end">
             <ion-button (click)="closeModal()">Cerrar</ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
       <ion-content color="dark" class="ion-padding">
-        <div class="model-viewer-container">
-          <!-- Google Model Viewer -->
-          <model-viewer 
-            *ngIf="selectedElement"
-            [src]="selectedElement.glb"
-            camera-controls
-            auto-rotate
-            ar
-            shadow-intensity="1"
-            [alt]="selectedElement.name">
-          </model-viewer>
-        </div>
-        <div class="modal-info-card">
-          <h2 class="modal-title">{{ selectedElement?.name }}</h2>
-          <p class="modal-desc">{{ selectedElement?.desc }}</p>
+        <div class="modal-body-layout">
+          <div class="model-viewer-container">
+            <!-- Google Model Viewer -->
+            <model-viewer 
+              *ngIf="selectedElement"
+              [src]="selectedElement.glb"
+              camera-controls
+              auto-rotate
+              ar
+              shadow-intensity="1"
+              [alt]="selectedElement.name">
+            </model-viewer>
+          </div>
+          <div class="modal-info-card">
+            <h2 class="modal-title">{{ selectedElement?.name }}</h2>
+            <p class="modal-desc">{{ selectedElement?.desc }}</p>
+          </div>
         </div>
       </ion-content>
     </ng-template>
