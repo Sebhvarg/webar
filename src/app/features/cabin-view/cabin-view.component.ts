@@ -36,6 +36,16 @@ export class CabinViewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.currentLayer = this.stateService.getCurrentLayer();
+
+    this.subscriptions.add(
+      this.stateService.activeExperienceId$.subscribe(() => {
+        this.currentLayer = this.stateService.getCurrentLayer();
+        const firstElement = this.currentLayer.elements[0];
+        if (firstElement) {
+          this.stateService.setActiveElementId(firstElement.id);
+        }
+      })
+    );
     
     this.subscriptions.add(
       this.stateService.activeElementId$.subscribe(id => this.activeElementId = id)

@@ -122,6 +122,23 @@
   --box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
+.model-modal-ionic::part(content) {
+  width: min(90vw, 460px);
+  height: min(80vh, 700px);
+  border-radius: 20px;
+}
+
+.model-modal-ionic ion-content::part(scroll) {
+  overflow-y: auto;
+  padding-bottom: 18px;
+}
+
+.modal-info-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 .model-viewer-container {
   width: 100%;
   height: 250px;

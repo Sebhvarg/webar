@@ -21,18 +21,12 @@
     </button>
     <div class="marker-dropdown-content glass" *ngIf="isMarkerMenuOpen">
       <button
+        *ngFor="let exp of experiences"
         class="marker-pill interactive"
-        [class.active]="activeModelId === 'robot'"
-        (click)="selectModel('robot')"
+        [class.active]="activeExperienceId === exp.id"
+        (click)="selectModel(exp.id)"
         type="button">
-        Hiro - Choza
-      </button>
-      <button
-        class="marker-pill interactive"
-        [class.active]="activeModelId === 'spaceship'"
-        (click)="selectModel('spaceship')"
-        type="button">
-        Kanji - Pato
+        {{ (exp.markerLabel || exp.markerPreset) + ' - ' + exp.name }}
       </button>
     </div>
   </div>

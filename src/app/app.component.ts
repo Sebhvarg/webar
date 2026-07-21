@@ -20,7 +20,11 @@ export class AppComponent implements OnInit, OnDestroy {
   showLoadingScreen = true;
   showFixedChoza = false;
   isLandscapeMode = true;
-  activeModelId = 'robot';
+  isInteriorActive = false;
+  activeExperienceId = '';
+  activeMarkerId = '';
+  activeScanImage = '';
+  detectedExperienceId = '';
   private subscriptions = new Subscription();
 
   private onMarkerFound = (event: Event) => {
@@ -29,34 +33,28 @@ export class AppComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Choza overlay should only react when Hiro is the selected marker.
-    if (this.activeModelId !== 'robot') {
-      this.showFixedChoza = false;
-      return;
-    }
-
     const customEvent = event as CustomEvent<{ id: string }>;
-    if (customEvent.detail?.id === 'marker-hiro') {
+    if (customEvent.detail?.id === this.activeMarkerId) {
       this.showFixedChoza = true;
+      this.detectedExperienceId = this.activeExperienceId;
       return;
     }
 
-    // Hide the fixed Choza only when a different marker is scanned.
-    if (customEvent.detail?.id && customEvent.detail.id !== 'marker-hiro') {
+    if (customEvent.detail?.id && customEvent.detail.id !== this.activeMarkerId) {
       this.showFixedChoza = false;
     }
   };
 
   private onMarkerLost = (event: Event) => {
     const customEvent = event as CustomEvent<{ id: string }>;
-    if (customEvent.detail?.id === 'marker-hiro') {
-      // Keep Choza visible even when Hiro is lost.
+    if (customEvent.detail?.id === this.activeMarkerId) {
+      // Keep the detected experience latched until the user selects a new one.
       return;
     }
   };
 
   private onEnterChozaRequest = () => {
-    if (this.activeModelId !== 'robot') {
+    if (!this.showFixedChoza) {
       return;
     }
     this.startChozaZoomAndFade();
@@ -72,18 +70,25 @@ export class AppComponent implements OnInit, OnDestroy {
 
   private onArResetRequest = () => {
     this.showFixedChoza = false;
+    this.detectedExperienceId = '';
   };
 
   private onOrientationChange = () => {
     this.isLandscapeMode = window.innerWidth > window.innerHeight;
     if (!this.isLandscapeMode) {
       this.showFixedChoza = false;
+      this.detectedExperienceId = '';
     }
   };
 
   constructor(public stateService: StateService) {}
 
   ngOnInit() {
+    const activeExperience = this.stateService.getActiveExperience();
+    this.activeExperienceId = activeExperience.id;
+    this.activeMarkerId = `marker-${activeExperience.markerPreset}`;
+    this.activeScanImage = activeExperience.scanImage;
+
     this.onOrientationChange();
     window.addEventListener('resize', this.onOrientationChange as EventListener);
     window.addEventListener('orientationchange', this.onOrientationChange as EventListener);
@@ -96,11 +101,13 @@ export class AppComponent implements OnInit, OnDestroy {
     window.addEventListener('ar-reset-request', this.onArResetRequest as EventListener);
 
     this.subscriptions.add(
-      this.stateService.activeModelId$.subscribe(modelId => {
-        this.activeModelId = modelId;
-        if (modelId !== 'robot') {
-          this.showFixedChoza = false;
-        }
+      this.stateService.activeExperienceId$.subscribe(experienceId => {
+        this.activeExperienceId = experienceId;
+        const activeExperience = this.stateService.getActiveExperience();
+        this.activeMarkerId = `marker-${activeExperience.markerPreset}`;
+        this.activeScanImage = activeExperience.scanImage;
+        this.showFixedChoza = false;
+        this.detectedExperienceId = '';
       })
     );
 
@@ -108,6 +115,17 @@ export class AppComponent implements OnInit, OnDestroy {
       this.stateService.arStarted$.subscribe(started => {
         if (started) {
           this.showFixedChoza = false;
+          this.detectedExperienceId = '';
+        }
+      })
+    );
+
+    this.subscriptions.add(
+      this.stateService.interiorActive$.subscribe(active => {
+        this.isInteriorActive = active;
+        if (active) {
+          this.showFixedChoza = false;
+          this.detectedExperienceId = '';
         }
       })
     );
@@ -173,26 +191,33 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     this.showFixedChoza = false;
+    this.detectedExperienceId = '';
     this.stateService.setInteriorActive(true);
   }
 
   private returnToHome() {
     this.showFixedChoza = false;
+    this.detectedExperienceId = '';
     this.stateService.setInteriorActive(false);
     this.stateService.setArStarted(false);
   }
 
   private returnToScanner() {
     this.showFixedChoza = false;
+    this.detectedExperienceId = '';
     this.stateService.setInteriorActive(false);
     this.stateService.setMarkerVisible(false);
     this.stateService.setModelLoaded(false);
     this.stateService.setModelAnchored(false);
 
-    // Always remount scanner to reset AR.js tracking/camera state reliably.
+    // Remount scanner to reset AR.js tracking/camera state reliably.
     this.stateService.setArStarted(false);
     setTimeout(() => {
       this.stateService.setArStarted(true);
     }, 180);
+  }
+
+  get isFixedScanOverlayVisible(): boolean {
+    return !this.isInteriorActive && this.isLandscapeMode && this.stateService.getActiveExperienceId() === this.detectedExperienceId && !!this.detectedExperienceId;
   }
 }

@@ -15,16 +15,11 @@ export interface Layer {
   elements: LayerElement[];
 }
 
-export interface ARModel {
+export interface ARExperience {
+  id: string;
   name: string;
   markerPreset: string;
-  type: string;
-  url?: string;
-  modelUrl?: string;
-  width?: number;
-  height?: number;
-  scale: string;
-  position: string;
-  rotation: string;
-  emoji: string;
+  markerLabel?: string;
+  scanImage: string;
+  layer: Layer;
 }

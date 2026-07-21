@@ -16,23 +16,14 @@
     renderer="logarithmicDepthBuffer: true; colorManagement: true;">
     
     <a-assets>
-      <img id="choza-img" src="assets/img/choza.webp">
+      <img *ngFor="let exp of stateService.experiences" [id]="'scan-img-' + exp.id" [src]="exp.scanImage">
     </a-assets>
 
-    <!-- Marcador Hiro para la Choza -->
-    <a-marker id="marker-hiro" preset="hiro" registerevents>
-    </a-marker>
-
-    <!-- Marcador Kanji para la Nave/Pato -->
-    <a-marker id="marker-kanji" preset="kanji" registerevents>
-      <a-entity 
-        id="ar-model-kanji" 
-        gltf-model="url(assets/models/duck.glb)" 
-        scale="0.5 0.5 0.5" 
-        position="0 0 0" 
-        rotation="0 0 0" 
-        class="interactive">
-      </a-entity>
+    <a-marker
+      *ngFor="let exp of stateService.experiences"
+      [id]="'marker-' + exp.markerPreset"
+      [attr.preset]="exp.markerPreset"
+      registerevents>
     </a-marker>
     
     <a-entity camera>
@@ -47,10 +38,10 @@
   <app-ar-view *ngIf="stateService.arStarted$ | async"></app-ar-view>
 
   <!-- Choza fija en pantalla completa al detectar Hiro -->
-  <div class="fixed-choza-overlay" *ngIf="(stateService.arStarted$ | async) && showFixedChoza">
-    <img src="assets/img/choza.webp" alt="Choza" class="fixed-choza-image">
+  <div class="fixed-choza-overlay" *ngIf="(stateService.arStarted$ | async) && isFixedScanOverlayVisible">
+    <img [src]="activeScanImage" alt="Escena AR" class="fixed-choza-image">
   </div>
-  <div class="fixed-choza-controls" *ngIf="(stateService.arStarted$ | async) && showFixedChoza">
+  <div class="fixed-choza-controls" *ngIf="(stateService.arStarted$ | async) && isFixedScanOverlayVisible">
     <button class="enter-choza-button" (click)="enterChozaFromOverlay()">Entrar a la choza</button>
   </div>
 
